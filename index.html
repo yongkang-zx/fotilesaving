@@ -1,0 +1,3647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>方太 · 职前 AI 课程设计工作台</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================
+   方太 · 职前 AI 课程设计工作台
+   设计语言：新中式现代轻奢
+   主色：宣纸白 + 墨黑 + 朱砂红 + 翠青 + 暖金
+   ===================================================== */
+
+:root {
+  /* 纸张色系 */
+  --paper:        #F6F1E7;   /* 主背景：宣纸米白 */
+  --paper-deep:   #ECE4D2;   /* 次背景：浅米褐 */
+  --paper-soft:   #FAF7F0;   /* 卡片底色 */
+  --paper-warm:   #F2EBDC;   /* 暖白 */
+
+  /* 墨色系 */
+  --ink-900:      #14110D;   /* 主文字 */
+  --ink-700:      #2C2823;
+  --ink-500:      #5A5247;
+  --ink-400:      #7A7065;
+  --ink-300:      #A89E91;
+  --ink-200:      #C9BFB1;
+  --ink-100:      #E2DACB;
+
+  /* 主强调色系 */
+  --vermilion:    #B83A2A;   /* 朱砂红 - 主品牌色 */
+  --vermilion-d:  #8E2A1E;
+  --vermilion-l:  #D97062;
+  --vermilion-bg: rgba(184, 58, 42, 0.08);
+
+  /* 辅助色 */
+  --jade:         #4A7568;   /* 翠青 */
+  --jade-l:       #7BA597;
+  --jade-bg:      rgba(74, 117, 104, 0.10);
+
+  --gold:         #B8915A;   /* 暖金 */
+  --gold-l:       #D6B47A;
+  --gold-bg:      rgba(184, 145, 90, 0.12);
+
+  --indigo:       #2F4858;   /* 深靛蓝 - 用于章节 */
+  --indigo-l:     #6E8A9A;
+
+  /* 状态 */
+  --success:      #4A7568;
+  --warn:         #C8902F;
+  --danger:       #B83A2A;
+
+  /* 排版 */
+  --serif: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mono:  'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(28, 22, 14, 0.04);
+  --shadow:    0 2px 8px rgba(28, 22, 14, 0.06), 0 1px 2px rgba(28, 22, 14, 0.04);
+  --shadow-md: 0 4px 20px rgba(28, 22, 14, 0.08), 0 2px 6px rgba(28, 22, 14, 0.04);
+  --shadow-lg: 0 12px 40px rgba(28, 22, 14, 0.12), 0 4px 12px rgba(28, 22, 14, 0.06);
+
+  /* 圆角 */
+  --r-sm: 4px;
+  --r:    8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+}
+
+/* ========== Reset ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink-900);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern', 'liga', 'calt';
+}
+
+/* 背景纹理 - 仿宣纸纤维 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(at 20% 20%, rgba(184, 58, 42, 0.03) 0px, transparent 50%),
+    radial-gradient(at 80% 60%, rgba(74, 117, 104, 0.03) 0px, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--ink-200);
+  border-radius: 4px;
+  border: 2px solid var(--paper);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ink-300); }
+
+/* ========== Layout ========== */
+.app {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 248px 1fr 360px;
+  height: 100vh;
+  background: var(--paper);
+}
+
+/* ========== Sidebar ========== */
+.sidebar {
+  background: var(--paper-deep);
+  border-right: 1px solid var(--ink-100);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sb-brand {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid var(--ink-100);
+  position: relative;
+}
+
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.sb-seal {
+  display: none;
+}
+
+.sb-seal::after {
+  display: none;
+}
+
+.sb-logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: var(--paper-soft);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.sb-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 0.5px;
+}
+
+.sb-en {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--ink-400);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.sb-meta {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ink-500);
+}
+
+.sb-meta-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(74, 117, 104, 0.18);
+}
+
+.sb-meta-tag {
+  padding: 2px 8px;
+  background: var(--vermilion-bg);
+  color: var(--vermilion);
+  font-weight: 500;
+  border-radius: 3px;
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+}
+
+/* Sidebar nav */
+.sb-nav {
+  flex: 1;
+  padding: 20px 14px;
+  overflow-y: auto;
+}
+
+.sb-nav-section {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--ink-400);
+  letter-spacing: 4px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+}
+
+.sb-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--ink-500);
+  border-radius: var(--r);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sb-nav-item:hover {
+  background: rgba(20, 17, 13, 0.04);
+  color: var(--ink-900);
+}
+
+.sb-nav-item.active {
+  background: var(--paper-soft);
+  color: var(--ink-900);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+.sb-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  background: var(--vermilion);
+  border-radius: 0 2px 2px 0;
+}
+
+.sb-nav-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-300);
+  width: 18px;
+  text-align: center;
+}
+
+.sb-nav-item.active .sb-nav-num { color: var(--vermilion); }
+
+.sb-nav-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sb-nav-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.6;
+}
+
+.sb-nav-label {
+  flex: 1;
+}
+
+.sb-nav-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  background: var(--ink-100);
+  color: var(--ink-500);
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.sb-nav-item.active .sb-nav-badge {
+  background: var(--vermilion);
+  color: #FCE6D5;
+}
+
+.sb-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--ink-100);
+  background: var(--paper-warm);
+}
+
+.sb-countdown-label {
+  font-family: var(--serif);
+  font-size: 10px;
+  color: var(--ink-400);
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+
+.sb-countdown {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--vermilion);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.sb-countdown-sub {
+  font-size: 11px;
+  color: var(--ink-500);
+  margin-top: 4px;
+}
+
+/* ========== Main ========== */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--ink-100);
+  background: var(--paper);
+  flex-shrink: 0;
+}
+
+.main-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.main-title-chap {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--vermilion);
+  border-radius: 2px;
+}
+
+.main-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 1px;
+}
+
+.main-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--r);
+  font-size: 13px;
+  color: var(--ink-700);
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  transition: all 0.18s;
+  font-family: var(--sans);
+}
+
+.btn:hover {
+  background: var(--paper-warm);
+  border-color: var(--ink-200);
+  transform: translateY(-1px);
+}
+
+.btn svg { width: 14px; height: 14px; }
+
+.btn-primary {
+  background: var(--vermilion);
+  color: #FCE6D5;
+  border-color: var(--vermilion);
+}
+
+.btn-primary:hover {
+  background: var(--vermilion-d);
+  border-color: var(--vermilion-d);
+  box-shadow: 0 4px 12px rgba(184, 58, 42, 0.25);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink-500);
+}
+
+.btn-ghost:hover {
+  background: var(--paper-warm);
+  color: var(--ink-900);
+}
+
+/* Content area */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 56px 80px;
+  position: relative;
+}
+
+.content-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* ========== Right Panel ========== */
+.panel {
+  background: var(--paper-deep);
+  border-left: 1px solid var(--ink-100);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ink-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 1px;
+}
+
+.panel-title-deco {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title-deco::before {
+  content: '';
+  width: 16px;
+  height: 1px;
+  background: var(--vermilion);
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ========== Components: Section ========== */
+.section {
+  margin-bottom: 48px;
+  animation: fadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-100);
+  position: relative;
+}
+
+.section-head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 60px;
+  height: 1px;
+  background: var(--vermilion);
+}
+
+.section-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--vermilion);
+  line-height: 1;
+  letter-spacing: -1px;
+  font-feature-settings: 'tnum';
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.section-sub {
+  font-size: 12px;
+  color: var(--ink-400);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
+/* ========== Card ========== */
+.card {
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 24px;
+  margin-bottom: 16px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  border-color: var(--ink-200);
+  box-shadow: var(--shadow);
+}
+
+.card-paper {
+  background: var(--paper-warm);
+  border-color: var(--ink-100);
+}
+
+.card-deco {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 32px;
+  height: 2px;
+  background: var(--vermilion);
+  border-radius: 0 0 2px 2px;
+}
+
+.card-deco::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 8px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* ========== Notif Card ========== */
+.notif-preview {
+  background: linear-gradient(180deg, var(--paper-soft) 0%, var(--paper-warm) 100%);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 32px 36px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.notif-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at top right, rgba(184, 58, 42, 0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.notif-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  color: var(--ink-500);
+  letter-spacing: 1px;
+}
+
+.notif-meta-sep { color: var(--ink-200); }
+
+.notif-subject {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+
+.notif-body {
+  font-size: 14px;
+  line-height: 1.95;
+  color: var(--ink-700);
+  font-family: var(--sans);
+}
+
+.notif-body p { margin-bottom: 14px; }
+
+.notif-body strong {
+  color: var(--ink-900);
+  font-weight: 600;
+}
+
+.notif-body ul {
+  list-style: none;
+  margin: 10px 0 14px 4px;
+}
+
+.notif-body ul li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 6px;
+}
+
+.notif-body ul li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 11px;
+  width: 8px;
+  height: 1px;
+  background: var(--vermilion);
+}
+
+.notif-quote {
+  font-family: var(--serif);
+  border-left: 2px solid var(--gold);
+  padding-left: 14px;
+  margin: 14px 0;
+  color: var(--ink-500);
+  font-style: italic;
+}
+
+.notif-divider {
+  border: none;
+  border-top: 1px dashed var(--ink-200);
+  margin: 22px 0;
+  position: relative;
+}
+
+.notif-divider::after {
+  content: '❀';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--paper-soft);
+  padding: 0 10px;
+  color: var(--vermilion);
+  font-size: 12px;
+}
+
+/* Editable textarea */
+.editable-wrap {
+  position: relative;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 20px;
+  transition: border 0.2s;
+}
+
+.editable-wrap:focus-within {
+  border-color: var(--vermilion-l);
+  box-shadow: 0 0 0 3px var(--vermilion-bg);
+}
+
+.editable-label {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  background: var(--paper);
+  padding: 0 10px;
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 2px;
+}
+
+.editable {
+  width: 100%;
+  min-height: 320px;
+  background: transparent;
+  color: var(--ink-900);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.85;
+  resize: vertical;
+}
+
+.editable-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--ink-100);
+}
+
+.editable-charcount {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-400);
+}
+
+/* ========== Questionnaire ========== */
+.q-section {
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 26px 28px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.q-section-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-100);
+}
+
+.q-section-num {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--vermilion);
+  line-height: 1;
+  width: 38px;
+  text-align: center;
+  border-right: 1px solid var(--ink-100);
+  padding-right: 14px;
+}
+
+.q-section-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 1px;
+}
+
+.q-section-sub {
+  font-size: 11.5px;
+  color: var(--ink-400);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+.q-list { display: flex; flex-direction: column; gap: 12px; }
+
+.q-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r);
+  transition: all 0.18s;
+}
+
+.q-card:hover {
+  border-color: var(--vermilion-l);
+  background: var(--paper-soft);
+}
+
+.q-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--vermilion);
+  background: var(--vermilion-bg);
+  padding: 3px 8px;
+  border-radius: 3px;
+  height: fit-content;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.q-body { flex: 1; min-width: 0; }
+
+.q-title {
+  font-size: 14px;
+  color: var(--ink-900);
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.q-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--jade);
+  background: var(--jade-bg);
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.q-opts {
+  font-size: 12.5px;
+  color: var(--ink-500);
+  line-height: 1.85;
+  margin-bottom: 6px;
+}
+
+.q-opts-chip {
+  display: inline-block;
+  padding: 2px 9px;
+  background: var(--paper-warm);
+  border: 1px solid var(--ink-100);
+  border-radius: 3px;
+  margin: 2px 4px 2px 0;
+  font-size: 11.5px;
+  color: var(--ink-700);
+}
+
+.q-purpose {
+  font-family: var(--serif);
+  font-size: 11.5px;
+  color: var(--gold);
+  font-style: italic;
+  margin-top: 4px;
+  padding-left: 10px;
+  border-left: 2px solid var(--gold-l);
+}
+
+/* ========== Course Design ========== */
+.principle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.principle-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r);
+  transition: all 0.2s;
+}
+
+.principle-card:hover {
+  border-color: var(--vermilion-l);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.principle-num {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--vermilion-l);
+  line-height: 1;
+  font-feature-settings: 'tnum';
+}
+
+.principle-text {
+  font-size: 12.5px;
+  color: var(--ink-700);
+  line-height: 1.6;
+}
+
+.principle-text strong {
+  color: var(--ink-900);
+  font-weight: 600;
+}
+
+/* Phase */
+.phase-card {
+  position: relative;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 24px 26px;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.phase-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--vermilion);
+}
+
+.phase-card.phase-jade::before { background: var(--jade); }
+.phase-card.phase-gold::before { background: var(--gold); }
+
+.phase-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.phase-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.phase-phase {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--ink-400);
+  letter-spacing: 4px;
+}
+
+.phase-name {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 0.5px;
+}
+
+.phase-timeline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-500);
+  padding: 4px 10px;
+  background: var(--paper-warm);
+  border-radius: 3px;
+  border: 1px solid var(--ink-100);
+}
+
+.phase-timeline-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.module-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.module-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--ink-700);
+  line-height: 1.6;
+  transition: all 0.18s;
+}
+
+.module-item:hover {
+  background: var(--paper-warm);
+  border-color: var(--ink-200);
+}
+
+.module-icon {
+  width: 18px;
+  height: 18px;
+  background: var(--vermilion-bg);
+  color: var(--vermilion);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-family: var(--serif);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.module-item.phase-jade .module-icon { background: var(--jade-bg); color: var(--jade); }
+.module-item.phase-gold .module-icon { background: var(--gold-bg); color: var(--gold); }
+
+/* ========== Main Course Module ========== */
+.main-module {
+  position: relative;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+
+.main-module:hover {
+  border-color: var(--ink-200);
+  box-shadow: var(--shadow);
+}
+
+.main-module.adv-vermilion { border-left: 3px solid var(--vermilion); }
+.main-module.adv-jade      { border-left: 3px solid var(--jade); }
+.main-module.adv-gold      { border-left: 3px solid var(--gold); }
+
+.main-module-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--ink-100);
+}
+
+.main-module-num {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  width: 42px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.main-module.adv-vermilion .main-module-num { color: var(--vermilion); }
+.main-module.adv-jade      .main-module-num { color: var(--jade); }
+.main-module.adv-gold      .main-module-num { color: var(--gold); }
+
+.main-module-body { flex: 1; min-width: 0; }
+
+.main-module-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.main-module-summary {
+  font-size: 12px;
+  color: var(--ink-500);
+  line-height: 1.5;
+}
+
+.main-module-time {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-700);
+  background: var(--paper-warm);
+  border: 1px solid var(--ink-100);
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.main-module-points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.main-module-points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--ink-700);
+  line-height: 1.7;
+}
+
+.main-module-points li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--ink-300);
+}
+
+.main-module-advance {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 12px;
+  color: var(--ink-500);
+  line-height: 1.6;
+}
+
+.main-module-advance::before {
+  content: '进阶 → ';
+  font-family: var(--serif);
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.course-summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.course-summary-tag {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 3px;
+  padding: 4px 10px;
+  background: var(--vermilion-bg);
+  border-radius: 3px;
+}
+
+.course-summary-total {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink-900);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.course-summary-total small {
+  font-size: 13px;
+  color: var(--ink-400);
+  font-weight: 400;
+  margin-left: 4px;
+  letter-spacing: 0;
+}
+
+.course-summary-meta {
+  font-size: 12px;
+  color: var(--ink-500);
+  line-height: 1.6;
+}
+
+.advance-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.advance-chip {
+  font-family: var(--sans);
+  font-size: 12px;
+  padding: 6px 12px;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: 1px solid rgba(184, 145, 90, 0.3);
+  border-radius: 20px;
+}
+
+.collaboration-note {
+  background: var(--paper-soft);
+  border: 1px dashed var(--ink-200);
+  border-radius: var(--r-md);
+  padding: 14px 18px;
+  font-size: 12.5px;
+  color: var(--ink-500);
+  line-height: 1.7;
+  margin-top: 8px;
+}
+
+.collaboration-note strong {
+  color: var(--vermilion);
+  font-weight: 600;
+}
+
+/* ========== Inline Edit ========== */
+[contenteditable="true"] {
+  outline: none;
+  transition: background 0.15s, box-shadow 0.15s;
+  border-radius: 3px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+}
+
+[contenteditable="true"]:hover {
+  background: rgba(184, 145, 90, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(184, 145, 90, 0.35);
+  cursor: text;
+}
+
+[contenteditable="true"]:focus {
+  background: rgba(184, 58, 42, 0.05);
+  box-shadow: inset 0 0 0 1px var(--vermilion-l);
+  cursor: text;
+}
+
+[contenteditable="true"]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink-300);
+  font-style: italic;
+}
+
+.edit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  background: var(--gold-bg);
+  border: 1px solid rgba(184, 145, 90, 0.3);
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.edit-badge svg {
+  width: 9px;
+  height: 9px;
+  stroke-width: 2;
+}
+
+.point-edit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.point-edit-row .point-action {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px dashed var(--ink-200);
+  color: var(--ink-300);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.18s;
+}
+
+.main-module:hover .point-action,
+.main-module:focus-within .point-action {
+  opacity: 1;
+}
+
+.point-action:hover {
+  background: var(--vermilion);
+  color: #fff;
+  border-color: var(--vermilion);
+  opacity: 1;
+}
+
+.add-point-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px dashed var(--ink-200);
+  border-radius: var(--r-sm);
+  color: var(--ink-400);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+}
+
+.add-point-btn:hover {
+  background: var(--paper-warm);
+  border-color: var(--vermilion-l);
+  color: var(--vermilion);
+  border-style: solid;
+}
+
+/* Save indicator */
+.save-indicator {
+  position: fixed;
+  top: 80px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--paper-soft);
+  border: 1px solid var(--jade-l);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--jade);
+  font-family: var(--mono);
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  box-shadow: var(--shadow);
+}
+
+.save-indicator.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.save-indicator::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: 0 0 0 3px rgba(74, 117, 104, 0.18);
+}
+
+/* Confirm bar (course tab only) */
+.confirm-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.confirm-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.confirm-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--ink-200);
+  border-radius: 5px;
+  background: var(--paper);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.confirm-checkbox:hover {
+  border-color: var(--jade);
+}
+
+.confirm-checkbox:checked {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.confirm-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.confirm-label {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  cursor: pointer;
+  user-select: none;
+}
+
+.confirm-hint {
+  font-size: 11.5px;
+  color: var(--ink-400);
+  line-height: 1.5;
+}
+
+.confirm-bar.confirmed {
+  background: linear-gradient(135deg, var(--jade-bg), var(--paper-soft));
+  border-color: var(--jade-l);
+}
+
+.confirm-bar.confirmed .confirm-label {
+  color: var(--jade);
+}
+
+.confirm-bar.confirmed .confirm-checkbox {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.confirm-bar.confirmed .confirm-hint::before {
+  content: '✓ ';
+  color: var(--jade);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* Course confirmed lock overlay */
+.course-locked-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--jade-bg);
+  border: 1px solid var(--jade-l);
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  color: var(--jade);
+  font-weight: 500;
+}
+
+.course-locked-banner svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.course-locked-banner strong {
+  color: var(--ink-900);
+}
+
+.course-locked-banner button {
+  margin-left: auto;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--jade);
+  border-radius: var(--r-sm);
+  color: var(--jade);
+  font-size: 11.5px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.18s;
+}
+
+.course-locked-banner button:hover {
+  background: var(--jade);
+  color: #fff;
+}
+
+/* ========== Course Progress (per-module confirmation) ========== */
+.course-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.course-progress-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.course-progress-num {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.course-progress-num .done-num {
+  color: var(--jade);
+  font-size: 40px;
+}
+
+.course-progress-num .total-num {
+  color: var(--ink-300);
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.course-progress-meta {
+  flex: 1;
+  min-width: 200px;
+}
+
+.course-progress-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.course-progress-hint {
+  font-size: 11.5px;
+  color: var(--ink-500);
+  line-height: 1.5;
+}
+
+.course-progress-bar {
+  width: 160px;
+  height: 6px;
+  background: var(--ink-100);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.course-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--jade), var(--jade-l));
+  border-radius: 3px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Per-module confirmation */
+.main-module-confirm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--paper-warm);
+  border: 1px dashed var(--ink-200);
+  border-radius: var(--r-sm);
+  transition: all 0.18s;
+}
+
+.main-module.is-done .main-module-confirm {
+  background: var(--jade-bg);
+  border-color: var(--jade-l);
+  border-style: solid;
+}
+
+.module-confirm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+}
+
+.module-confirm-toggle input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ink-200);
+  border-radius: 50%;
+  background: var(--paper);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.module-confirm-toggle input:hover {
+  border-color: var(--jade);
+}
+
+.module-confirm-toggle input:checked {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.module-confirm-toggle input:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 4px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.module-confirm-label {
+  font-family: var(--serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-500);
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+
+.module-confirm-toggle input:checked + .module-confirm-label {
+  color: var(--jade);
+}
+
+.main-module.is-done .module-confirm-label {
+  color: var(--jade);
+}
+
+.module-confirm-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--jade);
+  background: var(--paper-soft);
+  border: 1px solid var(--jade-l);
+  padding: 3px 9px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Done state for main-module */
+.main-module.is-done {
+  border-color: var(--jade-l);
+  background: linear-gradient(180deg, var(--paper-soft) 0%, rgba(74, 117, 104, 0.04) 100%);
+}
+
+.main-module.is-done.adv-vermilion::before,
+.main-module.is-done.adv-jade::before,
+.main-module.is-done.adv-gold::before {
+  background: var(--jade);
+}
+
+.main-module.is-done .main-module-num {
+  color: var(--jade) !important;
+}
+
+.main-module.is-done .add-point-btn {
+  display: none;
+}
+
+/* ========== Partner Cards ========== */
+.partner-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, var(--vermilion-bg), transparent 70%);
+}
+
+.stat-label {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--ink-400);
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink-900);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.stat-value.accent { color: var(--vermilion); }
+
+.stat-suffix {
+  font-size: 14px;
+  color: var(--ink-400);
+  font-weight: 400;
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--ink-500);
+  margin-top: 8px;
+}
+
+.role-card {
+  display: flex;
+  gap: 16px;
+  padding: 22px 24px;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+
+.role-card:hover {
+  border-color: var(--vermilion-l);
+  box-shadow: var(--shadow);
+}
+
+.role-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--vermilion-bg);
+  color: var(--vermilion);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.role-icon.jade { background: var(--jade-bg); color: var(--jade); }
+.role-icon.gold { background: var(--gold-bg); color: var(--gold); }
+
+.role-body { flex: 1; min-width: 0; }
+
+.role-name {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-400);
+  background: var(--paper-warm);
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--ink-100);
+}
+
+.role-tag.low { color: var(--jade); border-color: var(--jade-l); background: var(--jade-bg); }
+.role-tag.mid { color: var(--gold); border-color: var(--gold-l); background: var(--gold-bg); }
+.role-tag.high { color: var(--vermilion); border-color: var(--vermilion-l); background: var(--vermilion-bg); }
+
+.role-desc {
+  font-size: 12.5px;
+  color: var(--ink-500);
+  line-height: 1.7;
+}
+
+.notif-card-flow {
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  padding: 22px 26px;
+  position: relative;
+}
+
+.notif-card-flow::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  font-family: var(--serif);
+  font-size: 60px;
+  color: var(--vermilion);
+  line-height: 1;
+  opacity: 0.4;
+}
+
+.notif-card-flow-label {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.notif-card-flow-text {
+  font-family: var(--serif);
+  font-size: 13.5px;
+  color: var(--ink-700);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* ========== Settings ========== */
+.settings-table {
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 1.4fr;
+  gap: 0;
+  border-bottom: 1px solid var(--ink-100);
+  transition: background 0.18s;
+}
+
+.settings-row:last-child { border-bottom: none; }
+.settings-row:hover { background: var(--paper-warm); }
+
+.settings-cell {
+  padding: 16px 22px;
+  font-size: 13px;
+}
+
+.settings-cell.item {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--ink-900);
+  border-right: 1px solid var(--ink-100);
+}
+
+.settings-cell.opts {
+  color: var(--ink-500);
+}
+
+.settings-cell.suggest {
+  color: var(--jade);
+  font-weight: 500;
+  font-style: italic;
+}
+
+.settings-cell.suggest::before {
+  content: '→ ';
+  font-weight: 600;
+}
+
+.opt-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--paper);
+  border: 1px solid var(--ink-100);
+  border-radius: 12px;
+  margin: 2px 4px 2px 0;
+  font-size: 11.5px;
+  color: var(--ink-700);
+}
+
+/* ========== Panel components ========== */
+.panel-block {
+  margin-bottom: 22px;
+}
+
+.panel-block-title {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink-100);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-block-title::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--vermilion);
+  border-radius: 50%;
+}
+
+.mini-table {
+  width: 100%;
+  font-size: 12.5px;
+}
+
+.mini-table tr {
+  border-bottom: 1px dashed var(--ink-100);
+}
+
+.mini-table tr:last-child { border-bottom: none; }
+
+.mini-table td {
+  padding: 8px 0;
+  vertical-align: top;
+}
+
+.mini-table td:first-child {
+  color: var(--ink-500);
+  width: 70px;
+  padding-right: 12px;
+  font-family: var(--serif);
+}
+
+.mini-table td:last-child {
+  color: var(--ink-900);
+  font-weight: 500;
+}
+
+.mini-table .accent-jade { color: var(--jade); font-weight: 600; }
+.mini-table .accent-gold { color: var(--gold); font-weight: 600; }
+.mini-table .accent-vermilion { color: var(--vermilion); font-weight: 600; }
+
+.mini-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mini-tag {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  padding: 3px 9px;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-100);
+  border-radius: 3px;
+  color: var(--ink-700);
+}
+
+.mini-tag.blue { background: rgba(47, 72, 88, 0.08); border-color: rgba(47, 72, 88, 0.2); color: var(--indigo); }
+.mini-tag.jade { background: var(--jade-bg); border-color: rgba(74, 117, 104, 0.2); color: var(--jade); }
+.mini-tag.gold { background: var(--gold-bg); border-color: rgba(184, 145, 90, 0.2); color: var(--gold); }
+.mini-tag.vermilion { background: var(--vermilion-bg); border-color: rgba(184, 58, 42, 0.2); color: var(--vermilion); }
+
+.panel-callout {
+  background: var(--paper-soft);
+  border-left: 2px solid var(--vermilion);
+  padding: 12px 14px;
+  border-radius: 0 var(--r) var(--r) 0;
+  font-size: 12.5px;
+  color: var(--ink-700);
+  line-height: 1.7;
+  margin-top: 10px;
+}
+
+.panel-callout-title {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--vermilion);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+/* ========== Toast ========== */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink-900);
+  color: var(--paper);
+  padding: 11px 22px;
+  border-radius: var(--r);
+  font-size: 13px;
+  font-family: var(--sans);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+  pointer-events: none;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========== Tag decoration ========== */
+.tag-deco {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--ink-500);
+  letter-spacing: 2px;
+}
+
+.tag-deco::before {
+  content: '「';
+  color: var(--vermilion);
+}
+
+.tag-deco::after {
+  content: '」';
+  color: var(--vermilion);
+}
+
+/* ========== Stats line ========== */
+.stat-line {
+  display: flex;
+  gap: 24px;
+  padding: 14px 24px;
+  margin-top: 32px;
+  border-top: 1px solid var(--ink-100);
+  font-size: 11.5px;
+  color: var(--ink-500);
+  letter-spacing: 0.5px;
+}
+
+.stat-line-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-line-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vermilion);
+}
+
+/* ========== Decorative vertical text ========== */
+.vertical-tag {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--ink-300);
+  padding: 12px 0;
+  position: relative;
+}
+
+/* ========== Helpers ========== */
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-6 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+
+/* Responsive */
+@media (max-width: 1280px) {
+  .app { grid-template-columns: 220px 1fr 320px; }
+  .content { padding: 32px 40px 60px; }
+}
+
+@media (max-width: 1024px) {
+  .app { grid-template-columns: 200px 1fr; }
+  .panel { display: none; }
+  .content { padding: 28px 32px 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ========== Sidebar ========== -->
+  <aside class="sidebar">
+
+    <div class="sb-brand">
+      <div class="sb-logo">
+        <img src="logo.png" alt="方太·阳光伙伴" class="sb-logo-img">
+        <div class="sb-brand-text">
+          <div class="sb-name">方太·职前 AI</div>
+          <div class="sb-en">Course Design Workstation</div>
+        </div>
+      </div>
+      <div class="sb-meta">
+        <span class="sb-meta-dot"></span>
+        <span>2026 校招 · 在建</span>
+        <span class="sb-meta-tag">v1.0</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-nav-section">设计模块</div>
+
+      <div class="sb-nav-item active" data-tab="notif">
+        <span class="sb-nav-num">01</span>
+        <span class="sb-nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 11-5.8-1.6"/></svg>
+        </span>
+        <span class="sb-nav-label">群通知文案</span>
+        <span class="sb-nav-badge">v1</span>
+      </div>
+
+      <div class="sb-nav-item" data-tab="questionnaire">
+        <span class="sb-nav-num">02</span>
+        <span class="sb-nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        </span>
+        <span class="sb-nav-label">需求问卷</span>
+        <span class="sb-nav-badge">11题</span>
+      </div>
+
+      <div class="sb-nav-item" data-tab="course">
+        <span class="sb-nav-num">03</span>
+        <span class="sb-nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </span>
+        <span class="sb-nav-label">课程设计</span>
+        <span class="sb-nav-badge">6+3</span>
+      </div>
+
+      <div class="sb-nav-item" data-tab="partner">
+        <span class="sb-nav-num">04</span>
+        <span class="sb-nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </span>
+        <span class="sb-nav-label">共创伙伴</span>
+        <span class="sb-nav-badge">3</span>
+      </div>
+
+      <div class="sb-nav-item" data-tab="settings">
+        <span class="sb-nav-num">05</span>
+        <span class="sb-nav-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </span>
+        <span class="sb-nav-label">配置 & 导出</span>
+      </div>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-countdown-label">截 止 倒 计 时</div>
+      <div class="sb-countdown" id="countdown">—</div>
+      <div class="sb-countdown-sub">2026 年 7 月 10 日 24:00</div>
+    </div>
+
+  </aside>
+
+  <!-- ========== Main ========== -->
+  <div class="main">
+
+    <header class="main-header">
+      <div class="main-title-wrap">
+        <span class="main-title-chap" id="mainChap">壹</span>
+        <h1 class="main-title" id="mainTitle">群通知文案</h1>
+      </div>
+      <div class="main-actions">
+        <button class="btn btn-ghost" onclick="resetEditable()" id="resetBtn" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+          重置文案
+        </button>
+        <button class="btn btn-ghost" onclick="resetCourse()" id="resetCourseBtn" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+          重置课程
+        </button>
+        <button class="btn" onclick="copyActive()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制当前页
+        </button>
+        <button class="btn btn-primary" onclick="exportAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          导出 JSON
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content-inner" id="mainContent"></div>
+
+      <div class="stat-line">
+        <span class="stat-line-item"><span class="stat-line-dot"></span> 状态：草稿 · 待群内发布</span>
+        <span class="stat-line-item">问卷：10 题 · 5 段式</span>
+        <span class="stat-line-item">课程：6 板块 · 90min · 3 阶段</span>
+        <span class="stat-line-item">伙伴：3 角色 · 待启动</span>
+        <span class="stat-line-item">最近更新：2026-07-05</span>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ========== Right Panel ========== -->
+  <aside class="panel">
+    <header class="panel-header">
+      <div class="panel-title-deco">
+        <span class="panel-title" id="panelTitle">快速参考</span>
+      </div>
+      <span class="tag-deco" id="panelTag">手册</span>
+    </header>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="save-indicator" id="saveIndicator"></div>
+
+<script>
+/* =====================================================
+   数据：方太 · 职前 AI 课程设计
+   ===================================================== */
+
+const data = {
+  notif: {
+    subject: '🌐 【方太·职前 AI 课程】伙伴召集 & 需求征集',
+    body: `各位 26 阳光伙伴们，大家好！☀ @所有人
+
+在我们正式迈入学习提升第三阶段的过程中，AI 正在加速迭代，现计划面向 26 届校招伙伴，搭建一套「职场转身」的 AI 课程体系。现在召集第一批课程共创伙伴！
+
+我们希望你：
+<ul>
+  <li>🚀 有意愿学习 AI，不要求精通或熟练使用相关工具</li>
+  <li>🤝 秉承主动、开放、共创的精神</li>
+  <li>📋 能配合完成需求收集（案例演示非必须，有则更好）</li>
+  <li>🔍 愿意从不同体系视角，提供 AI 协同落地的场景需求</li>
+</ul>
+
+你会参与什么：
+<ol>
+  <li>所提需求将直接融入课程设计，真正「学你所想、解你所惑」</li>
+  <li>线上分享会的互动讨论与课程设计</li>
+  <li>与入职后 AI 课程丝滑衔接，与更多老师、伙伴一起共同学习、共同进步</li>
+</ol>
+
+📅 报名截止：<strong>7 月 10 日</strong>
+
+有意向参与 AI 共创的伙伴，私信负责人：<strong>@张鑫</strong>
+后续相关内容会在群内同步，欢迎大家踊跃报名、共同学习！
+
+📝 需求问卷同步开启——你的每一个想法，都会在分享会和课程中得到回应。
+
+<div class="notif-quote">以讲解促学习，以分享共成长。</div>
+
+期待积极热忱、有意与 AI 共成长的你加入，
+和我们一起解锁高效办公技能，助力团队共同进阶提升 ✨`,
+    editable: `各位 26 阳光伙伴们，大家好！☀ @所有人
+
+在我们正式迈入学习提升第三阶段的过程中，AI 正在加速迭代，现计划面向 26 届校招伙伴，搭建一套「职场转身」的 AI 课程体系。现在召集第一批课程共创伙伴！
+
+我们希望你：
+- 🚀 有意愿学习 AI，不要求精通或熟练使用相关工具
+- 🤝 秉承主动、开放、共创的精神
+- 📋 能配合完成需求收集（案例演示非必须，有则更好）
+- 🔍 愿意从不同体系视角，提供 AI 协同落地的场景需求
+
+你会参与什么：
+1. 所提需求将直接融入课程设计，真正「学你所想、解你所惑」
+2. 线上分享会的互动讨论与课程设计
+3. 与入职后 AI 课程丝滑衔接，与更多老师、伙伴一起共同学习、共同进步
+
+📅 报名截止：7 月 10 日
+
+有意向参与 AI 共创的伙伴，私信负责人：@张鑫
+后续相关内容会在群内同步，欢迎大家踊跃报名、共同学习！
+
+📝 需求问卷同步开启——你的每一个想法，都会在分享会和课程中得到回应。
+
+---
+以讲解促学习，以分享共成长。
+
+期待积极热忱、有意与 AI 共成长的你加入，
+和我们一起解锁高效办公技能，助力团队共同进阶提升 ✨`
+  },
+
+  questionnaire: {
+    parts: [
+      {
+        title: '基础信息',
+        sub: '1 题 · 基础画像',
+        questions: [
+          { num: 1, title: '组别 / 姓名', type: '文本', opts: '', purpose: '体系分类 + 实名标识' },
+        ]
+      },
+      {
+        title: 'AI 现状摸底',
+        sub: '3 题 · 能力基线 + 工具地图',
+        questions: [
+          { num: 2, title: '自评 AI 工具熟悉度', type: '单选·5档',
+            opts: ['完全不了解','偶尔使用','基本掌握','熟练使用','日常高频使用'],
+            purpose: '决定课程起点（扫盲 vs 进阶）' },
+          { num: 3, title: '用过哪些 AI 工具？', type: '多选',
+            opts: ['豆包','Kimi','ChatGPT','Gemini','WorkBuddy','Codex','Claude Code','通义千问','文心一言','Copilot','Cursor','Notion AI','DeepSeek','其他'],
+            purpose: '摸清当前工具体系，了解主流覆盖度' },
+          { num: 4, title: '最常用 AI 在什么场景？', type: '多选',
+            opts: ['写作润色','信息检索','数据分析','代码辅助','PPT制作','翻译','知识管理','其他'],
+            purpose: '识别高频应用域，作为课程案例切入点' },
+        ]
+      },
+      {
+        title: '学习意愿 & 需求',
+        sub: '3 题 · 意愿筛选 + 方向决策',
+        questions: [
+          { num: 5, title: '是否有意愿参与 AI 学习？', type: '单选', opts: ['是','否','考虑中'], purpose: '初筛参与人群' },
+          { num: 6, title: '如果有 AI 学习，你认为哪些内容是需要的？', type: '多选',
+            opts: ['大模型横评','术语速览','案例演示','其他（可补充）'],
+            purpose: '核心课程方向收集——直接决定内容权重' },
+          { num: 7, title: '你希望课程设计更偏向哪个方向？', type: '单选',
+            opts: ['国产优先（工具更方便获取、落地更快）','全球视野（紧跟前沿工具和趋势）','两者兼顾（以国产为主，适当引入全球视角）'],
+            purpose: '决定课程内容国产 vs 国际比例' },
+        ]
+      },
+      {
+        title: '场景痛点深挖',
+        sub: '3 题 · 痛点 + 技能方向',
+        questions: [
+          { num: 8, title: '日常工作中，哪些重复性高的事让你觉得「要是有个 AI 就好了」？', type: '开放式（可跳过）',
+            opts: '例如：每周手动汇总报表、反复回复类似的问题……',
+            purpose: '直接捕获痛点和真实场景' },
+          { num: 9, title: '你所在的体系中，哪些环节可能是 AI 协同的切入点？', type: '开放式（可选）',
+            opts: '', purpose: '体系视角，拓展覆盖面' },
+          { num: 11, title: '有了解或想要通过 AI 快速实现的技能吗？', type: '多选',
+            opts: ['数字分身','蒸馏人物\\技能','汇报材料自动化','小程序开发','其他'],
+            purpose: '识别高潜力技能方向，直接对接课程案例库' },
+        ]
+      },
+      {
+        title: '共创意愿',
+        sub: '1 题 · 招募课程共创伙伴',
+        questions: [
+          { num: 10, title: '是否愿意成为课程共创伙伴，参与后续课程设计与迭代？', type: '单选',
+            opts: ['是','否','考虑中'], purpose: '同步完成伙伴招募' },
+        ]
+      },
+    ],
+    decisions: [
+      { item: '投放平台', options: ['飞书问卷','腾讯问卷','金数据'], suggest: '飞书问卷，群内直达，数据自动汇总' },
+      { item: '匿名性', options: ['实名','匿名','可选'], suggest: '实名制（需标注组别），便于按体系聚类分析' },
+      { item: '投放方式', options: ['群内一次性发布','先预热再投'], suggest: '配合群通知同步发布，7/5-7/10 窗口期' },
+    ]
+  },
+
+  course: {
+    version: 'v2 · 暂定',
+    totalTime: 90,
+    tagline: '主线 90min 一次课 + 三阶段长期培养',
+    principles: [
+      { id: 'pr1', num: '壹', text: '<strong>讲解促学习</strong>，<strong>分享共成长</strong> —— 核心驱动机制' },
+      { id: 'pr2', num: '贰', text: '<strong>需求驱动</strong>：课程内容 100% 来自问卷真实反馈' },
+      { id: 'pr3', num: '叁', text: '<strong>实操 &gt; 理论</strong>：每板块必须有可上手的产出' },
+    ],
+    mainModules: [
+      {
+        id: 'm0', num: '0', color: 'gold',
+        name: 'AI 思维：什么时候用 / 不用',
+        time: 5,
+        summary: 'AI 介入判断三问 · 元能力铺垫',
+        confirmed: false,
+        points: [
+          '这事是不是重复？AI 介入后我能多花时间在哪？',
+          '错了代价我能承受吗？',
+          '判断 5 类高频场景：数据汇总 / 文案润色 / 信息检索 / 方案对比 / 跨语言沟通',
+        ],
+      },
+      {
+        id: 'm1', num: '1', color: 'vermilion',
+        name: '术语扫盲 & 大模型横评 & 使用场景概览',
+        time: 10,
+        summary: '通义千问 / Kimi / DeepSeek / Claude Code / WorkBuddy 等一图看懂',
+        confirmed: false,
+        points: [
+          '主流大模型横评 · 各自擅长点',
+          '10 类高频使用场景导览',
+          '避免「拿着锤子找钉子」',
+        ],
+      },
+      {
+        id: 'm2', num: '2', color: 'jade',
+        name: '本地知识库搭建：整理、搜集、自进化',
+        time: 20,
+        summary: '主线：3 步搭起来 + 进阶：联通全网，搭建内容工厂',
+        confirmed: false,
+        points: [
+          '主线（12min）：导入 → 分类 → 检索演示',
+          '进阶（8min）：联通全网知识库，搭建内容工厂',
+          '产出：每个伙伴的个人知识库雏形',
+        ],
+        advance: '联通全网 · 内容工厂 · 自动更新机制',
+      },
+      {
+        id: 'm3', num: '3', color: 'vermilion',
+        name: '个人数字分身搭建',
+        time: 25,
+        summary: '基础 / 技能 / 人格 三层颗粒度',
+        confirmed: false,
+        points: [
+          '基础层（5min）：蒸馏你自己的风格 —— 语气、常用表达、工作流',
+          '技能层（10min）：把分镜头脚本 / CMO 文案等专业技能蒸馏成 Agent',
+          '人格层（10min）：联合 2 和个人知识库，做出代表你本人发言的数字分身',
+          '部署到各平台（飞书 / 钉钉 / Web）',
+        ],
+        advance: '云端 24h 数字分身 · 加入群聊协同 · 不同代表人物圆桌会议',
+      },
+      {
+        id: 'm4', num: '4', color: 'gold',
+        name: '图 / 文 / 视频生成（侧重品味与设计语言）',
+        time: 28,
+        summary: '拆成 3 个 mini + 5min 质量评估清单',
+        confirmed: false,
+        points: [
+          '图（10min）：构图 / 色调 / 排版直觉 + 实操改图',
+          '文（8min）：语气库 / 删减原则 / 标题公式',
+          '视频（5min）：脚本 → 分镜 → 生成的全链路',
+          '质量检查清单（5min）：能删则删 / 有人味 / 事实核查',
+        ],
+      },
+      {
+        id: 'm5', num: '5', color: 'jade',
+        name: '行业研报 & 个性化报告推送',
+        time: 13,
+        summary: '搭情报流 + 团队协同推送',
+        confirmed: false,
+        points: [
+          '搭情报流（8min）：选信源 / 设标签 / 定时抓取',
+          '团队协同（5min）：研报推送给上下游伙伴的格式',
+          '产出：每人一键可订阅的行业简报',
+        ],
+      },
+    ],
+    collaboration: 'AI 协作模式融入每个板块末尾 30 秒 ——「这个场景怎么拉团队一起用」',
+    advanceItems: [
+      '云端 24h 数字分身代表人格执行任务',
+      '数字分身加入群聊进行项目协同',
+      '不同代表人物实时开启圆桌会议',
+      '联通全网知识库，搭建内容工厂',
+      'AI + 团队情报协同的高级工作流',
+    ],
+    phases: [
+      {
+        name: 'Phase 1 · 职前预热', sub: '入职前 · 7 月中旬起',
+        color: 'vermilion',
+        summary: '主线课程前置 · 工具上手 · 案例预热',
+        modules: [
+          { icon: '主', title: '主线课程（90min）', desc: '6 板块一次课，覆盖 AI 思维 → 知识库 → 分身 → 表达 → 情报' },
+          { icon: '具', title: '工具预热', desc: '通义千问 / Kimi / DeepSeek / Claude Code 等工具安装与试用' },
+          { icon: '案', title: '案例预热', desc: '已落地 AI 工作流的伙伴做 5min 经验分享' },
+        ],
+      },
+      {
+        name: 'Phase 2 · 入职衔接', sub: '入职后 1–2 周',
+        color: 'jade',
+        summary: '主线课程 + 岗位工作流落地',
+        modules: [
+          { icon: '岗', title: '岗位 AI 工作流', desc: 'R&D / 营销 / 供应链 / 职能 各自的体系定向场景' },
+          { icon: '协', title: '协同实战 Workshop', desc: '基于问卷需求的真实场景小组演练 + 导师点评' },
+          { icon: '链', title: '工具链整合', desc: 'AI + 飞书 / 钉钉 / 文档工具链嵌入日常协作流' },
+        ],
+      },
+      {
+        name: 'Phase 3 · 进阶深化', sub: '入职后 1–3 个月',
+        color: 'gold',
+        summary: '云端数字分身 · 圆桌会议 · 联通全网',
+        modules: [
+          { icon: '云', title: '云端 24h 数字分身', desc: '数字分身 7×24 代表你执行任务 · 加入群聊协同' },
+          { icon: '圆', title: '代表人物圆桌会议', desc: '不同体系的数字分身开启实时圆桌 · 跨域协同' },
+          { icon: '知', title: '个人知识库 + 联通全网', desc: '沉淀经验 · 联通外部知识源 · 内容工厂' },
+        ],
+      },
+    ],
+  },
+
+  partner: {
+    status: '待启动',
+    deadline: '2026-07-10',
+    roles: [
+      { char: 'A', color: 'vermilion', level: 'low',
+        name: '课程共创伙伴',
+        desc: '参与需求调研、提供体系视角的 AI 场景需求，是最广泛参与的角色。' },
+      { char: 'B', color: 'jade', level: 'mid',
+        name: '案例演示讲师',
+        desc: '在线上分享会演示自己的 AI 使用案例，给出 15–30 分钟讲解。' },
+      { char: 'C', color: 'gold', level: 'high',
+        name: '模块 co-lead',
+        desc: '主导某个课程模块的设计与迭代，对外输出可复用的教学产品。' },
+    ],
+    recruitment: '通过问卷 Part 4 同步筛选，报名截止后 3 天内确认名单，并建立共创专群。'
+  }
+};
+
+/* =====================================================
+   渲染逻辑
+   ===================================================== */
+
+const meta = {
+  notif:         { chap: '壹', title: '群通知文案',      tag: '通知' },
+  questionnaire: { chap: '贰', title: '需求问卷设计',    tag: '问卷' },
+  course:        { chap: '叁', title: '课程设计框架',    tag: '课程' },
+  partner:       { chap: '肆', title: '共创伙伴招募',    tag: '伙伴' },
+  settings:      { chap: '伍', title: '配置 & 待确认',   tag: '配置' },
+};
+
+/* =====================================================
+   持久化 · 课程设计实时编辑
+   部署到 GitHub Pages 后，浏览器 localStorage 会保留数据
+   ===================================================== */
+const STORAGE_KEY = 'fotile-ai-workstation-v1';
+const COURSE_CONFIRMED_KEY = 'fotile-ai-course-confirmed-v1';
+const DEFAULT_COURSE = JSON.parse(JSON.stringify(data.course));
+
+let currentTab = 'notif';
+let resetSnapshot = '';
+let saveTimer = null;
+let lastSavedAt = null;
+
+function $(id) { return document.getElementById(id); }
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved.course) {
+      // 字段级合并：保留默认结构 + 用户的修改
+      data.course = { ...data.course, ...saved.course };
+      // 数组逐项合并，确保新增字段不会丢
+      if (saved.course.mainModules) {
+        data.course.mainModules = saved.course.mainModules.map((m, i) => ({
+          ...DEFAULT_COURSE.mainModules[i],
+          ...m,
+          points: m.points || (DEFAULT_COURSE.mainModules[i] && DEFAULT_COURSE.mainModules[i].points) || [],
+        }));
+      }
+      if (saved.course.principles) {
+        data.course.principles = saved.course.principles.map((p, i) => ({
+          ...DEFAULT_COURSE.principles[i],
+          ...p,
+        }));
+      }
+      if (saved.course.phases) {
+        data.course.phases = saved.course.phases.map((p, i) => ({
+          ...DEFAULT_COURSE.phases[i],
+          ...p,
+        }));
+      }
+    }
+    if (saved.savedAt) lastSavedAt = new Date(saved.savedAt);
+  } catch (e) { console.warn('load failed', e); }
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      course: data.course,
+      savedAt: new Date().toISOString(),
+    }));
+    lastSavedAt = new Date();
+    updateSaveIndicator();
+  } catch (e) { console.warn('save failed', e); }
+}
+
+function debouncedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveToStorage(), 1000);
+}
+
+function isCourseConfirmed() {
+  return localStorage.getItem(COURSE_CONFIRMED_KEY) === 'true';
+}
+
+function setCourseConfirmed(v) {
+  if (v) localStorage.setItem(COURSE_CONFIRMED_KEY, 'true');
+  else localStorage.removeItem(COURSE_CONFIRMED_KEY);
+}
+
+/* 根据 path 更新嵌套对象，例如 'mainModules.0.name' */
+function setByPath(path, value) {
+  const parts = path.split('.');
+  let obj = data.course;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const k = /^\d+$/.test(parts[i]) ? parseInt(parts[i], 10) : parts[i];
+    if (obj[k] === undefined) return false;
+    obj = obj[k];
+  }
+  const lastK = /^\d+$/.test(parts[parts.length - 1]) ? parseInt(parts[parts.length - 1], 10) : parts[parts.length - 1];
+  obj[lastK] = value;
+  return true;
+}
+
+function getByPath(path) {
+  const parts = path.split('.');
+  let obj = data.course;
+  for (const p of parts) {
+    const k = /^\d+$/.test(p) ? parseInt(p, 10) : p;
+    if (obj[k] === undefined) return '';
+    obj = obj[k];
+  }
+  return obj;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.sb-nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  renderMain();
+  renderPanel();
+}
+
+function renderMain() {
+  const m = $('mainContent');
+  const chap = $('mainChap');
+  const title = $('mainTitle');
+  const resetBtn = $('resetBtn');
+  const resetCourseBtn = $('resetCourseBtn');
+  chap.textContent = meta[currentTab].chap;
+  title.textContent = meta[currentTab].title;
+  // 默认两个 reset 按钮都隐藏，按 tab 显示
+  resetBtn.style.display = 'none';
+  if (resetCourseBtn) resetCourseBtn.style.display = 'none';
+
+  if (currentTab === 'notif') {
+    resetBtn.style.display = 'inline-flex';
+    resetSnapshot = data.notif.editable;
+    m.innerHTML = `
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">01</div>
+          <div>
+            <div class="section-sub">PREVIEW · 群内发送效果</div>
+            <div class="section-title">通知预览</div>
+          </div>
+        </div>
+
+        <article class="notif-preview">
+          <div class="notif-meta">
+            <span>飞书群消息</span>
+            <span class="notif-meta-sep">/</span>
+            <span>26 届阳光总群</span>
+            <span class="notif-meta-sep">/</span>
+            <span>@所有人</span>
+          </div>
+          <h2 class="notif-subject">${data.notif.subject}</h2>
+          <div class="notif-body">${data.notif.body}</div>
+          <hr class="notif-divider" />
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div style="font-family:var(--serif);font-size:12px;color:var(--ink-400);letter-spacing:3px">
+              落款 · 方太集团人力资源中心
+            </div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--ink-400)">
+              2026.07.05
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">02</div>
+          <div>
+            <div class="section-sub">EDITABLE · 可编辑版本</div>
+            <div class="section-title">文案编辑</div>
+          </div>
+        </div>
+
+        <div class="editable-wrap">
+          <div class="editable-label">纯文本编辑 · 修改后点击「复制当前页」</div>
+          <textarea class="editable" id="editableNotif">${data.notif.editable}</textarea>
+          <div class="editable-actions">
+            <div class="editable-charcount" id="charCount">字数：—</div>
+            <button class="btn" onclick="copyNotif()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              复制文案
+            </button>
+          </div>
+        </div>
+      </section>
+    `;
+    // bind char count
+    setTimeout(() => {
+      const ta = $('editableNotif');
+      const cc = $('charCount');
+      const upd = () => { cc.textContent = `字数：${ta.value.length}`; };
+      ta.addEventListener('input', upd);
+      upd();
+    }, 0);
+  }
+
+  else if (currentTab === 'questionnaire') {
+    resetBtn.style.display = 'none';
+    let html = '';
+    data.questionnaire.parts.forEach((part, i) => {
+      html += `<section class="section">
+        <div class="section-head">
+          <div class="section-num">${String(i+1).padStart(2,'0')}</div>
+          <div>
+            <div class="section-sub">PART ${romanize(i+1)} · ${part.sub}</div>
+            <div class="section-title">${part.title}</div>
+          </div>
+        </div>
+
+        <div class="q-section">
+          <div class="q-section-head">
+            <div class="q-section-num">${i+1}</div>
+            <div>
+              <div class="q-section-title">${part.title}</div>
+              <div class="q-section-sub">${part.sub}</div>
+            </div>
+          </div>
+          <div class="q-list">`;
+      part.questions.forEach(q => {
+        let optsHtml = '';
+        if (Array.isArray(q.opts)) {
+          optsHtml = `<div class="q-opts">${q.opts.map(o => `<span class="q-opts-chip">${o}</span>`).join('')}</div>`;
+        } else if (q.opts) {
+          optsHtml = `<div class="q-opts" style="color:var(--ink-400);font-style:italic">${q.opts}</div>`;
+        }
+        html += `<div class="q-card">
+          <div class="q-num">Q${q.num}</div>
+          <div class="q-body">
+            <div class="q-title">
+              ${q.title}
+              <span class="q-type">${q.type}</span>
+            </div>
+            ${optsHtml}
+            ${q.purpose ? `<div class="q-purpose">设计意图 · ${q.purpose}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      html += `</div></div></section>`;
+    });
+    m.innerHTML = html;
+  }
+
+  else if (currentTab === 'course') {
+    resetBtn.style.display = 'none';
+    if (resetCourseBtn) resetCourseBtn.style.display = 'inline-flex';
+
+    const totalMods = data.course.mainModules.length;
+    const doneMods = data.course.mainModules.filter(m => m.confirmed).length;
+    const allDone = doneMods === totalMods;
+
+    let html = '';
+
+    // 进度条
+    html += `<div class="course-progress">
+      <div class="course-progress-left">
+        <div class="course-progress-num">
+          <span class="done-num">${doneMods}</span>
+          <span class="total-num">/ ${totalMods}</span>
+        </div>
+        <div class="course-progress-meta">
+          <div class="course-progress-title">${allDone ? '课程设计已全部完成' : '子课程确认进度'}</div>
+          <div class="course-progress-hint">
+            ${allDone
+              ? `所有板块已确认 · 改动会自动保存 · 上次保存 ${formatTime(lastSavedAt)}`
+              : `每个板块可独立勾选确认 · 当前已完成 ${doneMods} / ${totalMods} 个子课程`}
+          </div>
+        </div>
+      </div>
+      <div class="course-progress-bar">
+        <div class="course-progress-fill" style="width:${(doneMods/totalMods)*100}%"></div>
+      </div>
+    </div>`;
+
+    if (allDone) {
+      html += `<div class="course-locked-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+          <strong>课程设计已完成</strong> · ${totalMods} 个子课程全部确认 · 数据已保存至本地浏览器
+          <div style="font-size:11px;color:var(--ink-500);font-weight:400;margin-top:2px">
+            仍可继续微调内容，取消任一勾选可解锁对应板块
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // 核心原则
+    html += `<section class="section">
+      <div class="section-head">
+        <div class="section-num">01</div>
+        <div>
+          <div class="section-sub">PRINCIPLES · 课程设计原则 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
+          <div class="section-title">核心驱动</div>
+        </div>
+      </div>
+      <div class="principle-grid">`;
+    data.course.principles.forEach((p, pi) => {
+      html += `<div class="principle-card">
+        <div class="principle-num" contenteditable="true" data-path="principles.${pi}.num" data-placeholder="壹">${p.num}</div>
+        <div class="principle-text" contenteditable="true" data-path="principles.${pi}.text" data-placeholder="原则内容">${p.text}</div>
+      </div>`;
+    });
+    html += `</div></section>`;
+
+    // 主线课程
+    html += `<section class="section">
+      <div class="section-head">
+        <div class="section-num">02</div>
+        <div>
+          <div class="section-sub">MAIN COURSE · <span contenteditable="true" data-path="totalTime" data-placeholder="90" style="display:inline-block;min-width:24px">${data.course.totalTime}</span>min 一次课 · ${totalMods} 板块 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
+          <div class="section-title">主线课程设计</div>
+        </div>
+      </div>
+
+      <div class="course-summary-bar">
+        <span class="course-summary-tag" contenteditable="true" data-path="version" data-placeholder="版本标签">${data.course.version}</span>
+        <div class="course-summary-total"><span contenteditable="true" data-path="totalTime" data-placeholder="90" style="display:inline-block;min-width:40px;text-align:right">${data.course.totalTime}</span><small>min</small></div>
+        <div class="course-summary-meta" contenteditable="true" data-path="tagline" data-placeholder="副标题">${data.course.tagline}</div>
+      </div>`;
+
+    data.course.mainModules.forEach((mod, mi) => {
+      const isDone = !!mod.confirmed;
+      html += `<div class="main-module adv-${mod.color} ${isDone ? 'is-done' : ''}">
+        <div class="main-module-head">
+          <div class="main-module-num" contenteditable="true" data-path="mainModules.${mi}.num" data-placeholder="0">${mod.num}</div>
+          <div class="main-module-body">
+            <div class="main-module-name" contenteditable="true" data-path="mainModules.${mi}.name" data-placeholder="板块名称">${mod.name}</div>
+            <div class="main-module-summary" contenteditable="true" data-path="mainModules.${mi}.summary" data-placeholder="一句话概括">${mod.summary}</div>
+          </div>
+          <div class="main-module-time"><span contenteditable="true" data-path="mainModules.${mi}.time" data-placeholder="5" style="display:inline-block;min-width:24px;text-align:center">${mod.time}</span> min</div>
+        </div>
+        <div class="main-module-confirm">
+          <label class="module-confirm-toggle">
+            <input type="checkbox" data-action="toggle-module" data-mi="${mi}" ${isDone ? 'checked' : ''}>
+            <span class="module-confirm-label">${isDone ? '✓ 已确认' : '确认完成'}</span>
+          </label>
+          ${isDone ? '<span class="module-confirm-tag">已锁定</span>' : ''}
+        </div>
+        <ul class="main-module-points">`;
+      mod.points.forEach((pt, pi) => {
+        html += `<li>
+          <div class="point-edit-row">
+            <button class="point-action" data-action="del-point" data-mi="${mi}" data-pi="${pi}" title="删除此要点">×</button>
+            <div contenteditable="true" data-path="mainModules.${mi}.points.${pi}" data-placeholder="要点内容..." style="flex:1">${pt}</div>
+          </div>
+        </li>`;
+      });
+      html += `</ul>
+        <button class="add-point-btn" data-action="add-point" data-mi="${mi}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>
+          添加要点
+        </button>
+        ${mod.advance !== undefined ? `<div class="main-module-advance" contenteditable="true" data-path="mainModules.${mi}.advance" data-placeholder="进阶内容描述">${mod.advance || ''}</div>` : ''}
+      </div>`;
+    });
+
+    html += `<div class="collaboration-note">
+      <strong>协作融入：</strong><span contenteditable="true" data-path="collaboration" data-placeholder="协作说明">${data.course.collaboration}</span>
+    </div>`;
+
+    html += `</section>`;
+
+    // 进阶内容
+    html += `<section class="section">
+      <div class="section-head">
+        <div class="section-num">03</div>
+        <div>
+          <div class="section-sub">ADVANCED · Phase 3 进阶深化 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
+          <div class="section-title">进阶内容预告</div>
+        </div>
+      </div>
+      <div class="card card-paper" style="margin-bottom:12px">
+        <div style="font-family:var(--serif);font-size:13px;color:var(--gold);font-weight:600;letter-spacing:1px;margin-bottom:8px">
+          以下内容将在 Phase 3 展开
+        </div>
+        <div style="font-size:12.5px;color:var(--ink-500);line-height:1.7;margin-bottom:12px">
+          主线课程专注「看得见摸得着」的演示与上手。下列高阶能力放入 Phase 3（入职 1–3 月），
+          通过持续 Workshop 与项目实践沉淀。
+        </div>
+        <div class="advance-list">`;
+    data.course.advanceItems.forEach((a, ai) => {
+      html += `<span class="advance-chip" contenteditable="true" data-path="advanceItems.${ai}" data-placeholder="进阶项">${a}</span>`;
+    });
+    html += `</div>
+      </div>
+    </section>`;
+
+    // 三阶段体系
+    html += `<section class="section">
+      <div class="section-head">
+        <div class="section-num">04</div>
+        <div>
+          <div class="section-sub">PHASES · 长期培养路径 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
+          <div class="section-title">三阶段体系</div>
+        </div>
+      </div>`;
+
+    data.course.phases.forEach((phase, phi) => {
+      html += `<div class="phase-card phase-${phase.color}">
+        <div class="phase-head">
+          <div class="phase-title-group">
+            <span class="phase-phase">PHASE</span>
+            <span class="phase-name" contenteditable="true" data-path="phases.${phi}.name" data-placeholder="阶段名称">${phase.name}</span>
+          </div>
+          <span class="phase-timeline"><span class="phase-timeline-dot"></span><span contenteditable="true" data-path="phases.${phi}.sub" data-placeholder="时间线">${phase.sub}</span></span>
+        </div>
+        <div style="font-size:12.5px;color:var(--ink-500);line-height:1.7;margin-bottom:12px;padding-left:2px" contenteditable="true" data-path="phases.${phi}.summary" data-placeholder="阶段概括">${phase.summary}</div>
+        <div class="module-list">`;
+      phase.modules.forEach((mod, mi2) => {
+        html += `<div class="module-item phase-${phase.color}">
+          <div class="module-icon" contenteditable="true" data-path="phases.${phi}.modules.${mi2}.icon" data-placeholder="字">${mod.icon}</div>
+          <div>
+            <div style="font-weight:500;color:var(--ink-900);margin-bottom:2px" contenteditable="true" data-path="phases.${phi}.modules.${mi2}.title" data-placeholder="模块标题">${mod.title}</div>
+            <div style="font-size:11.5px;color:var(--ink-500);line-height:1.6" contenteditable="true" data-path="phases.${phi}.modules.${mi2}.desc" data-placeholder="模块描述">${mod.desc}</div>
+          </div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+    html += `</section>`;
+    m.innerHTML = html;
+
+    // 绑定每个子板块的勾选状态 —— 增量更新，不重建 DOM
+    m.querySelectorAll('[data-action="toggle-module"]').forEach(cb => {
+      cb.addEventListener('change', e => {
+        const mi = parseInt(cb.dataset.mi, 10);
+        const isDone = e.target.checked;
+        data.course.mainModules[mi].confirmed = isDone;
+        saveToStorage();
+        updateModuleCard(mi, isDone);
+        updateCourseProgress();
+        updateCoursePanel();
+        const name = data.course.mainModules[mi].name || `板块 ${mi}`;
+        showToast(isDone ? `✓ 「${name}」已确认` : `已取消「${name}」确认`);
+      });
+    });
+    // 添加要点 —— 在对应板块的列表末尾追加新 li，不重建整个 mainContent
+    m.querySelectorAll('[data-action="add-point"]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const mi = parseInt(btn.dataset.mi, 10);
+        const mod = data.course.mainModules[mi];
+        const newText = '新要点 · 点击编辑';
+        mod.points.push(newText);
+        saveToStorage();
+
+        // 找到对应板块的 ul，插入新的 li
+        const card = document.querySelectorAll('.main-module')[mi];
+        if (!card) return;
+        const ul = card.querySelector('.main-module-points');
+        if (!ul) return;
+        const pi = mod.points.length - 1;
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div class="point-edit-row">
+            <button class="point-action" data-action="del-point" data-mi="${mi}" data-pi="${pi}" title="删除此要点">×</button>
+            <div contenteditable="true" data-path="mainModules.${mi}.points.${pi}" data-placeholder="要点内容..." style="flex:1">${newText}</div>
+          </div>
+        `;
+        ul.appendChild(li);
+        // 绑定新加的删除按钮
+        const newBtn = li.querySelector('[data-action="del-point"]');
+        if (newBtn) bindDeletePoint(newBtn);
+        showToast('已添加要点');
+      });
+    });
+    // 删除要点
+    m.querySelectorAll('[data-action="del-point"]').forEach(btn => {
+      bindDeletePoint(btn);
+    });
+  }
+
+  else if (currentTab === 'partner') {
+    resetBtn.style.display = 'none';
+    let html = `
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">01</div>
+          <div>
+            <div class="section-sub">OVERVIEW · 招募概览</div>
+            <div class="section-title">当前进度</div>
+          </div>
+        </div>
+
+        <div class="partner-stats">
+          <div class="stat-card">
+            <div class="stat-label">当 前 状 态</div>
+            <div class="stat-value accent">${data.partner.status}</div>
+            <div class="stat-sub">通知已就绪 · 等待群内发布</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">报 名 截 止</div>
+            <div class="stat-value">7<span class="stat-suffix">月</span>10<span class="stat-suffix">日</span></div>
+            <div class="stat-sub">倒计时见左下角</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">02</div>
+          <div>
+            <div class="section-sub">ROLES · 三类共创角色</div>
+            <div class="section-title">分工与投入</div>
+          </div>
+        </div>`;
+
+    data.partner.roles.forEach(r => {
+      const clsMap = { 'low':'low', 'mid':'mid', 'high':'high' };
+      const txtMap = { 'low':'轻投入', 'mid':'中投入', 'high':'高投入' };
+      html += `<div class="role-card">
+        <div class="role-icon ${r.color}">${r.char}</div>
+        <div class="role-body">
+          <div class="role-name">
+            ${r.name}
+            <span class="role-tag ${clsMap[r.level]}">投入 · ${txtMap[r.level]}</span>
+          </div>
+          <div class="role-desc">${r.desc}</div>
+        </div>
+      </div>`;
+    });
+
+    html += `<div class="notif-card-flow" style="margin-top:24px">
+      <div class="notif-card-flow-label">招 募 方 式</div>
+      <div class="notif-card-flow-text">${data.partner.recruitment}</div>
+    </div>`;
+    html += `</section>`;
+    m.innerHTML = html;
+  }
+
+  else if (currentTab === 'settings') {
+    resetBtn.style.display = 'none';
+    let html = `
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">01</div>
+          <div>
+            <div class="section-sub">PENDING · 待确认事项</div>
+            <div class="section-title">关键决策</div>
+          </div>
+        </div>
+
+        <div class="settings-table">`;
+    data.questionnaire.decisions.forEach(d => {
+      html += `<div class="settings-row">
+        <div class="settings-cell item">${d.item}</div>
+        <div class="settings-cell opts">${d.options.map(o => `<span class="opt-pill">${o}</span>`).join('')}</div>
+        <div class="settings-cell suggest">${d.suggest}</div>
+      </div>`;
+    });
+    html += `</div></section>`;
+
+    html += `
+      <section class="section">
+        <div class="section-head">
+          <div class="section-num">02</div>
+          <div>
+            <div class="section-sub">EXPORT · 完整数据</div>
+            <div class="section-title">导出 JSON</div>
+          </div>
+        </div>
+
+        <div class="card card-paper">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+            <div style="flex:1;min-width:240px">
+              <div style="font-family:var(--serif);font-size:14px;color:var(--ink-900);font-weight:600;margin-bottom:4px">
+                fotile-ai-course-design.json
+              </div>
+              <div style="font-size:12.5px;color:var(--ink-500);line-height:1.7">
+                将当前 5 个模块的全部设计数据导出为 JSON，用于后续程序化处理、平台对接或归档。
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="exportAll()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              立即导出
+            </button>
+          </div>
+        </div>
+      </section>`;
+    m.innerHTML = html;
+  }
+}
+
+function renderPanel() {
+  const titleEl = $('panelTitle');
+  const tagEl = $('panelTag');
+  const p = $('panelBody');
+
+  titleEl.textContent = '快速参考';
+  tagEl.textContent = meta[currentTab].tag;
+
+  if (currentTab === 'notif') {
+    p.innerHTML = `
+      <div class="panel-block">
+        <div class="panel-block-title">发送渠道</div>
+        <table class="mini-table">
+          <tr><td>主渠道</td><td>钉钉群（26 阳光总群）</td></tr>
+          <tr><td>辅助</td><td>飞书</td></tr>
+          <tr><td>格式</td><td>群消息推送</td></tr>
+          <tr><td>频率</td><td>发布 1 次 + 各组内提醒</td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">关键时点</div>
+        <table class="mini-table">
+          <tr><td>首轮</td><td class="accent-jade">7月7–8日</td></tr>
+          <tr><td>提醒</td><td class="accent-gold">7月10日</td></tr>
+          <tr><td>截止</td><td class="accent-vermilion">7月10日 24:00</td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">设计要点</div>
+        <p style="font-size:12.5px;color:var(--ink-700);line-height:1.8">
+          • 开头 @所有人，确保 26 届伙伴都能看到<br>
+          • 突出<strong style="color:var(--vermilion)">「不要求熟练」</strong>，降低参与门槛<br>
+          • <strong style="color:var(--vermilion)">减少冗余文字，高效传递信息</strong><br>
+          • 留 24 小时缓冲，避免周末发送
+        </p>
+      </div>
+    `;
+  } else if (currentTab === 'questionnaire') {
+    p.innerHTML = `
+      <div class="panel-block">
+        <div class="panel-block-title">问卷参数</div>
+        <table class="mini-table">
+          <tr><td>总题数</td><td>11 题（核心）</td></tr>
+          <tr><td>预计耗时</td><td>4 – 6 分钟</td></tr>
+          <tr><td>结构</td><td>5 段式</td></tr>
+          <tr><td>目标人群</td><td>26 届校招</td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">题型分布</div>
+        <div class="mini-tags">
+          <span class="mini-tag">文本 1</span>
+          <span class="mini-tag jade">单选 4</span>
+          <span class="mini-tag gold">多选 4</span>
+          <span class="mini-tag vermilion">开放式 2</span>
+        </div>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">v2 升级点</div>
+        <div class="panel-callout">
+          <div class="panel-callout-title">数 据 更 干 净</div>
+          工具 + 场景拆为两题；学习意愿移到摸底之后，逻辑递进更自然；工具选项补全豆包 / WorkBuddy / Codex / Claude Code / DeepSeek / Gemini。
+        </div>
+      </div>
+    `;
+  } else if (currentTab === 'course') {
+    const cTotal = data.course.mainModules.length;
+    const cDone = data.course.mainModules.filter(m => m.confirmed).length;
+    const cTimeTotal = data.course.mainModules.reduce((s, m) => s + (Number(m.time) || 0), 0);
+    p.innerHTML = `
+      <div class="panel-block">
+        <div class="panel-block-title">子课程确认</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">
+          <span style="font-family:var(--serif);font-size:28px;font-weight:700;color:var(--jade)">${cDone}</span>
+          <span style="font-family:var(--serif);font-size:16px;color:var(--ink-300)">/ ${cTotal}</span>
+          <span style="font-size:11px;color:var(--ink-400);margin-left:6px">已完成</span>
+        </div>
+        <table class="mini-table">
+          ${data.course.mainModules.map((m, i) => `
+            <tr>
+              <td>板块 ${m.num}</td>
+              <td>
+                <span style="${m.confirmed ? 'color:var(--jade);font-weight:600' : ''}">${m.confirmed ? '✓ 已确认' : '待确认'} · ${m.time}min</span>
+              </td>
+            </tr>
+          `).join('')}
+          <tr><td>合计</td><td><strong>${cTimeTotal} min</strong></td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">阶段交付物</div>
+        <p style="font-size:12.5px;color:var(--ink-700);line-height:1.85">
+          <strong style="color:var(--ink-900)">主线</strong> → 个人知识库雏形 · 数字分身 · 行业简报订阅<br>
+          <strong style="color:var(--ink-900)">Phase 1</strong> → 主线课程 + 工具预热 + 案例分享<br>
+          <strong style="color:var(--ink-900)">Phase 2</strong> → 岗位 AI 工作流 + 协同 Workshop<br>
+          <strong style="color:var(--ink-900)">Phase 3</strong> → 云端数字分身 + 圆桌会议 + 联通全网
+        </p>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">关键提醒</div>
+        <div class="panel-callout">
+          <div class="panel-callout-title">主 线 边 界</div>
+          高阶内容（云端 24h · 圆桌会议 · 联通全网）放入 Phase 3，不在主线讲，保证一次课能完整交付。
+        </div>
+      </div>
+    `;
+  } else if (currentTab === 'partner') {
+    p.innerHTML = `
+      <div class="panel-block">
+        <div class="panel-block-title">筛选标准</div>
+        <table class="mini-table">
+          <tr><td>必要条件</td><td>26 届校招 + 自愿报名</td></tr>
+          <tr><td>加分项</td><td>有 AI 使用案例 / 跨体系视角</td></tr>
+          <tr><td>核心素质</td><td>主动 · 开放 · 共创</td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">后续节奏</div>
+        <div class="panel-callout">
+          <div class="panel-callout-title">名 单 锁 定 后</div>
+          • 截止后 3 天内确认名单<br>
+          • 建立共创专群<br>
+          • 7 月中下旬 · 首次线上分享会<br>
+          • 共创伙伴获课程资料优先访问权
+        </div>
+      </div>
+    `;
+  } else if (currentTab === 'settings') {
+    p.innerHTML = `
+      <div class="panel-block">
+        <div class="panel-block-title">技术实现建议</div>
+        <table class="mini-table">
+          <tr><td>问卷平台</td><td>飞书问卷</td></tr>
+          <tr><td>数据汇总</td><td>多维表格 / Base</td></tr>
+          <tr><td>通知发送</td><td>飞书群 · 交互卡片</td></tr>
+          <tr><td>课程交付</td><td>飞书文档 + 视频会议</td></tr>
+          <tr><td>数据驱动</td><td>问卷 → 课程迭代</td></tr>
+        </table>
+      </div>
+      <div class="panel-block">
+        <div class="panel-block-title">导出格式</div>
+        <p style="font-size:12.5px;color:var(--ink-700);line-height:1.85">
+          导出 <code style="font-family:var(--mono);font-size:11px;background:var(--paper-warm);padding:1px 6px;border-radius:3px;color:var(--vermilion)">fotile-ai-course-design.json</code>，包含 5 个模块全部数据 + 时间戳。
+        </p>
+      </div>
+    `;
+  }
+}
+
+/* =====================================================
+   Actions
+   ===================================================== */
+
+function copyActive() {
+  let text;
+  if (currentTab === 'notif') {
+    const ta = $('editableNotif');
+    text = ta ? ta.value : data.notif.editable;
+  } else {
+    text = JSON.stringify(data[currentTab], null, 2);
+  }
+  navigator.clipboard.writeText(text).then(
+    () => showToast('已复制到剪贴板'),
+    () => fallbackCopy(text)
+  );
+}
+
+function copyNotif() {
+  const ta = $('editableNotif');
+  if (!ta) return;
+  navigator.clipboard.writeText(ta.value).then(
+    () => showToast('文案已复制 · 可直接粘贴到飞书'),
+    () => fallbackCopy(ta.value)
+  );
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast('已复制到剪贴板'); }
+  catch(e) { showToast('复制失败，请手动选择'); }
+  document.body.removeChild(ta);
+}
+
+function resetEditable() {
+  if (currentTab !== 'notif') return;
+  const ta = $('editableNotif');
+  if (!ta) return;
+  ta.value = resetSnapshot;
+  ta.dispatchEvent(new Event('input'));
+  showToast('已重置为原始版本');
+}
+
+function exportAll() {
+  const exportData = {
+    exported_at: new Date().toISOString(),
+    project: '方太 · 职前 AI 课程',
+    version: 'v1.0',
+    ...data
+  };
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `fotile-ai-course-design-${Date.now()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('已导出 JSON · 5 个模块全部数据');
+}
+
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* =====================================================
+   Save indicator + 课程编辑全局事件
+   ===================================================== */
+function updateSaveIndicator() {
+  const ind = $('saveIndicator');
+  if (!ind) return;
+  if (lastSavedAt) {
+    ind.textContent = `已自动保存 · ${formatTime(lastSavedAt)}`;
+  } else {
+    ind.textContent = '编辑后自动保存';
+  }
+  ind.classList.add('show');
+  clearTimeout(updateSaveIndicator._t);
+  updateSaveIndicator._t = setTimeout(() => ind.classList.remove('show'), 1800);
+}
+
+function formatTime(d) {
+  if (!d) return '';
+  const h = String(d.getHours()).padStart(2,'0');
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return `${h}:${m}`;
+}
+
+/* =====================================================
+   增量更新 helper —— 避免每次都重渲染整个 mainContent
+   ===================================================== */
+
+// 顶部进度条 + banner
+function updateCourseProgress() {
+  const totalMods = data.course.mainModules.length;
+  const doneMods = data.course.mainModules.filter(m => m.confirmed).length;
+  const allDone = doneMods === totalMods;
+
+  const doneNum = document.querySelector('.course-progress .done-num');
+  if (doneNum) doneNum.textContent = String(doneMods);
+  const fill = document.querySelector('.course-progress-fill');
+  if (fill) fill.style.width = `${(doneMods/totalMods)*100}%`;
+
+  const title = document.querySelector('.course-progress-title');
+  if (title) title.textContent = allDone ? '课程设计已全部完成' : '子课程确认进度';
+  const hint = document.querySelector('.course-progress-hint');
+  if (hint) {
+    hint.textContent = allDone
+      ? `所有板块已确认 · 改动会自动保存 · 上次保存 ${formatTime(lastSavedAt)}`
+      : `每个板块可独立勾选确认 · 当前已完成 ${doneMods} / ${totalMods} 个子课程`;
+  }
+
+  // all-done banner 显隐
+  const existingBanner = document.querySelector('.course-locked-banner');
+  if (allDone && !existingBanner) {
+    const banner = document.createElement('div');
+    banner.className = 'course-locked-banner';
+    banner.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <strong>课程设计已完成</strong> · ${totalMods} 个子课程全部确认 · 数据已保存至本地浏览器
+        <div style="font-size:11px;color:var(--ink-500);font-weight:400;margin-top:2px">
+          仍可继续微调内容，取消任一勾选可解锁对应板块
+        </div>
+      </div>
+    `;
+    const progress = document.querySelector('.course-progress');
+    if (progress && progress.parentNode) {
+      progress.parentNode.insertBefore(banner, progress.nextSibling);
+    }
+  } else if (!allDone && existingBanner) {
+    existingBanner.remove();
+  }
+}
+
+// 右侧参考面板：只更新「子课程确认」块，不重建整个 panel
+function updateCoursePanel() {
+  if (currentTab !== 'course') return;
+  const panel = $('panelBody');
+  if (!panel) return;
+
+  const cTotal = data.course.mainModules.length;
+  const cDone = data.course.mainModules.filter(m => m.confirmed).length;
+  const cTimeTotal = data.course.mainModules.reduce((s, m) => s + (Number(m.time) || 0), 0);
+
+  // 找「子课程确认」块
+  const blocks = panel.querySelectorAll('.panel-block');
+  blocks.forEach(block => {
+    const title = block.querySelector('.panel-block-title');
+    if (title && title.textContent.trim() === '子课程确认') {
+      // 更新大数字
+      const bigNum = block.querySelector('span[style*="font-size:28px"]');
+      if (bigNum) bigNum.textContent = String(cDone);
+      // 更新每行
+      const rows = block.querySelectorAll('.mini-table tr');
+      // 第一行是表头（板块 X / 待确认·Xmin），跳过
+      // 倒数第二行是「合计」，最后一行是分隔
+      const dataRows = Array.from(rows).slice(0, cTotal);
+      data.course.mainModules.forEach((m, i) => {
+        const tr = dataRows[i];
+        if (!tr) return;
+        const td = tr.querySelectorAll('td')[1];
+        if (td) {
+          const span = td.querySelector('span');
+          if (span) {
+            span.textContent = `${m.confirmed ? '✓ 已确认' : '待确认'} · ${m.time}min`;
+            span.style.color = m.confirmed ? 'var(--jade)' : '';
+            span.style.fontWeight = m.confirmed ? '600' : '';
+          }
+        }
+      });
+      // 合计行
+      const lastDataRow = Array.from(rows).reverse().find(r => {
+        const tds = r.querySelectorAll('td');
+        return tds[0] && tds[0].textContent.trim() === '合计';
+      });
+      if (lastDataRow) {
+        const td = lastDataRow.querySelectorAll('td')[1];
+        if (td) td.innerHTML = `<strong>${cTimeTotal} min</strong>`;
+      }
+    }
+  });
+}
+
+// 单个板块卡片视觉更新（不重建 contenteditable，避免焦点丢失）
+function updateModuleCard(mi, isDone) {
+  const card = document.querySelectorAll('.main-module')[mi];
+  if (!card) return;
+  card.classList.toggle('is-done', isDone);
+
+  // 更新勾选行
+  const confirmArea = card.querySelector('.main-module-confirm');
+  if (confirmArea) {
+    const label = confirmArea.querySelector('.module-confirm-label');
+    if (label) label.textContent = isDone ? '✓ 已确认' : '确认完成';
+    let tag = confirmArea.querySelector('.module-confirm-tag');
+    if (isDone && !tag) {
+      tag = document.createElement('span');
+      tag.className = 'module-confirm-tag';
+      tag.textContent = '已锁定';
+      confirmArea.appendChild(tag);
+    } else if (!isDone && tag) {
+      tag.remove();
+    }
+  }
+}
+
+// 删除要点（增量更新）
+function bindDeletePoint(btn) {
+  if (btn._bindDel) return; // 避免重复绑定
+  btn._bindDel = true;
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const mi = parseInt(btn.dataset.mi, 10);
+    const pi = parseInt(btn.dataset.pi, 10);
+    const mod = data.course.mainModules[mi];
+    if (!mod || mod.points.length <= 1) {
+      showToast('至少保留一个要点');
+      return;
+    }
+    mod.points.splice(pi, 1);
+    saveToStorage();
+    // 找到对应的 li，移除
+    const li = btn.closest('li');
+    if (li) li.remove();
+    // 重新编号剩余 li 的 data-pi
+    const card = document.querySelectorAll('.main-module')[mi];
+    if (card) {
+      const lis = card.querySelectorAll('.main-module-points > li');
+      lis.forEach((l, idx) => {
+        const delBtn = l.querySelector('[data-action="del-point"]');
+        const editDiv = l.querySelector('[data-path]');
+        if (delBtn) delBtn.dataset.pi = idx;
+        if (editDiv) editDiv.dataset.path = `mainModules.${mi}.points.${idx}`;
+      });
+    }
+    showToast('已删除要点');
+  });
+}
+
+// 监听 contenteditable 的输入事件
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!el.dataset || !el.dataset.path) return;
+  let val = el.textContent;
+  // 数字字段自动转 number
+  if (['time', 'totalTime'].includes(el.dataset.path.split('.').slice(-1)[0]) ||
+      el.dataset.path === 'totalTime' ||
+      /mainModules\.\d+\.time$/.test(el.dataset.path)) {
+    const n = parseInt(val, 10);
+    if (!isNaN(n) && n >= 0) {
+      setByPath(el.dataset.path, n);
+    } else {
+      setByPath(el.dataset.path, val.trim());
+    }
+  } else {
+    setByPath(el.dataset.path, val);
+  }
+  debouncedSave();
+});
+
+// 监听回车键失焦（contenteditable 默认回车会插入换行，这里改成回车失焦）
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.dataset && e.target.dataset.path && !e.shiftKey) {
+    // 单行字段回车失焦
+    const isMultiline = e.target.dataset.path.includes('points.') || e.target.tagName === 'TEXTAREA';
+    if (!isMultiline) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  }
+});
+
+// 焦点离开时立即保存
+document.addEventListener('blur', e => {
+  if (e.target.dataset && e.target.dataset.path) {
+    saveToStorage();
+  }
+}, true);
+
+// 课程 tab 重置按钮（resetBtn 在 notif tab 时是显示的，但 course tab 我们改用另一个逻辑）
+function resetCourse() {
+  if (!confirm('确定要把课程设计重置回初始版本吗？所有改动将丢失。')) return;
+  data.course = JSON.parse(JSON.stringify(DEFAULT_COURSE));
+  localStorage.removeItem(COURSE_CONFIRMED_KEY);
+  saveToStorage();
+  renderMain();
+  renderPanel();
+  showToast('已重置为初始版本');
+}
+
+/* =====================================================
+   倒计时
+   ===================================================== */
+function updateCountdown() {
+  const target = new Date('2026-07-10T24:00:00+08:00').getTime();
+  const now = Date.now();
+  let diff = Math.max(0, target - now);
+  const days = Math.floor(diff / (1000*60*60*24));
+  diff -= days * (1000*60*60*24);
+  const hours = Math.floor(diff / (1000*60*60));
+  $('countdown').innerHTML = `${days}<span style="font-size:13px;color:var(--ink-400);margin:0 4px">天</span>${String(hours).padStart(2,'0')}<span style="font-size:13px;color:var(--ink-400);margin:0 4px">时</span>`;
+}
+
+/* =====================================================
+   Helpers
+   ===================================================== */
+function romanize(n) {
+  return ['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ','Ⅸ','Ⅹ'][n-1] || n;
+}
+
+/* =====================================================
+   Init
+   ===================================================== */
+// 启动时加载本地数据
+loadFromStorage();
+
+document.querySelectorAll('.sb-nav-item').forEach(el => {
+  el.addEventListener('click', () => switchTab(el.dataset.tab));
+});
+
+switchTab('notif');
+updateCountdown();
+setInterval(updateCountdown, 60 * 60 * 1000);
+</script>
+
+</body>
+</html>
