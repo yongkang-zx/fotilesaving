@@ -2,7 +2,7 @@
 # 如需部署到别的仓库：.\init.ps1 -RepoName "用户名/仓库名" -Token "ghp_xxx"
 
 param(
-    [string]$RepoName = "yongkang-zx/fotilesaving",
+    [string]$RepoName = "yongkang-zx/FOTILE-pre",
     [string]$Token
 )
 
