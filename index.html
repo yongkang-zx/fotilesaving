@@ -1246,6 +1246,184 @@ input, textarea {
   font-weight: 600;
 }
 
+/* ========== Phase Divider (v3 案例库按阶段分组) ========== */
+.phase-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 14px;
+}
+
+.phase-divider:first-of-type {
+  margin-top: 18px;
+}
+
+.phase-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--ink-200);
+}
+
+.phase-divider-label {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.phase-divider.phase-vermilion .phase-divider-label {
+  background: var(--vermilion-bg);
+  color: var(--vermilion);
+}
+
+.phase-divider.phase-jade .phase-divider-label {
+  background: var(--jade-bg);
+  color: var(--jade);
+}
+
+.phase-divider.phase-gold .phase-divider-label {
+  background: var(--gold-bg);
+  color: var(--gold);
+}
+
+.phase-divider.phase-vermilion .phase-divider-line {
+  background: linear-gradient(90deg, transparent, var(--ink-200));
+}
+
+/* ========== Main Module Meta Tags ========== */
+.main-module-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.meta-tag {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  white-space: normal;
+  display: inline-flex;
+  align-items: center;
+}
+
+.meta-format {
+  background: var(--paper-warm);
+  color: var(--ink-500);
+  border: 1px solid var(--ink-100);
+}
+
+.meta-output {
+  background: var(--jade-bg);
+  color: var(--jade);
+  border: 1px solid rgba(74, 117, 104, 0.25);
+}
+
+.meta-final {
+  background: var(--vermilion);
+  color: #FCE6D5;
+  border: 1px solid var(--vermilion);
+  font-weight: 600;
+}
+
+.main-module.is-done .meta-final {
+  background: var(--jade);
+  color: #fff;
+  border-color: var(--jade);
+}
+
+/* ========== Hands-on 5min 跑通 ========== */
+.main-module-handson {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border-left: 2px solid var(--gold);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.handson-label {
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  background: var(--gold-bg);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.handson-text {
+  color: var(--ink-700);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ========== Overall Advice ========== */
+.overall-advice {
+  margin-top: 28px;
+  padding: 22px 26px;
+  background: linear-gradient(135deg, var(--paper-warm), var(--paper-soft));
+  border: 1px solid var(--ink-100);
+  border-radius: var(--r-md);
+}
+
+.overall-advice-title {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vermilion);
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.overall-advice-list {
+  list-style: none;
+  counter-reset: advice;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.overall-advice-list li {
+  position: relative;
+  padding-left: 32px;
+  font-size: 13px;
+  color: var(--ink-700);
+  line-height: 1.7;
+  counter-increment: advice;
+}
+
+.overall-advice-list li::before {
+  content: counter(advice);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  background: var(--vermilion-bg);
+  color: var(--vermilion);
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ========== Inline Edit ========== */
 [contenteditable="true"] {
   outline: none;
@@ -2202,7 +2380,7 @@ input, textarea {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
         </span>
         <span class="sb-nav-label">课程设计</span>
-        <span class="sb-nav-badge">6+3</span>
+        <span class="sb-nav-badge">8+4</span>
       </div>
 
       <div class="sb-nav-item" data-tab="partner">
@@ -2265,7 +2443,7 @@ input, textarea {
       <div class="stat-line">
         <span class="stat-line-item"><span class="stat-line-dot"></span> 状态：草稿 · 待群内发布</span>
         <span class="stat-line-item">问卷：10 题 · 5 段式</span>
-        <span class="stat-line-item">课程：6 板块 · 90min · 3 阶段</span>
+        <span class="stat-line-item">课程：8 案例 · 4 阶段</span>
         <span class="stat-line-item">伙伴：3 角色 · 待启动</span>
         <span class="stat-line-item">最近更新：2026-07-05</span>
       </div>
@@ -2424,9 +2602,9 @@ const data = {
   },
 
   course: {
-    version: 'v2 · 暂定',
-    totalTime: 90,
-    tagline: '主线 90min 一次课 + 三阶段长期培养',
+    version: 'v3 · 案例库',
+    totalTime: 8,
+    tagline: '认知 → 提效 → 知识基建 → 自动化 · 普遍性 + 快速上手',
     principles: [
       { id: 'pr1', num: '壹', text: '<strong>讲解促学习</strong>，<strong>分享共成长</strong> —— 核心驱动机制' },
       { id: 'pr2', num: '贰', text: '<strong>需求驱动</strong>：课程内容 100% 来自问卷真实反馈' },
@@ -2434,119 +2612,177 @@ const data = {
     ],
     mainModules: [
       {
-        id: 'm0', num: '0', color: 'gold',
-        name: 'AI 思维：什么时候用 / 不用',
-        time: 5,
-        summary: 'AI 介入判断三问 · 元能力铺垫',
+        id: 'c1', num: '1', phase: '一阶', phaseName: '认知 & 选型', color: 'vermilion',
+        name: '大模型横评',
+        format: '15min 视频',
+        time: 15,
+        summary: 'GPT / 豆包 / Kimi / Claude / DeepSeek 各模型差异、适用场景、成本对比',
+        output: '一张模型选型对照表',
         confirmed: false,
         points: [
-          '这事是不是重复？AI 介入后我能多花时间在哪？',
-          '错了代价我能承受吗？',
-          '判断 5 类高频场景：数据汇总 / 文案润色 / 信息检索 / 方案对比 / 跨语言沟通',
-        ],
-      },
-      {
-        id: 'm1', num: '1', color: 'vermilion',
-        name: '术语扫盲 & 大模型横评 & 使用场景概览',
-        time: 10,
-        summary: '通义千问 / Kimi / DeepSeek / Claude Code / WorkBuddy 等一图看懂',
-        confirmed: false,
-        points: [
-          '主流大模型横评 · 各自擅长点',
-          '10 类高频使用场景导览',
+          '主流大模型横评：能力 / 速度 / 成本 三维对比',
+          '不同任务场景的模型匹配（写作 / 编码 / 推理 / 多模态）',
           '避免「拿着锤子找钉子」',
         ],
       },
       {
-        id: 'm2', num: '2', color: 'jade',
-        name: '本地知识库搭建：整理、搜集、自进化',
-        time: 20,
-        summary: '主线：3 步搭起来 + 进阶：联通全网，搭建内容工厂',
+        id: 'c2', num: '2', phase: '二阶', phaseName: '岗位提效', color: 'jade',
+        name: '行业调研',
+        format: '视频 + 实操',
+        time: 45,
+        summary: '用 AI（Kimi / DeepSeek）批量搜集、整理、摘要行业报告，对标竞品',
+        output: '一份 AI 辅助生成的行业简报模板',
         confirmed: false,
         points: [
-          '主线（12min）：导入 → 分类 → 检索演示',
-          '进阶（8min）：联通全网知识库，搭建内容工厂',
-          '产出：每个伙伴的个人知识库雏形',
+          '用 AI 批量搜集行业报告 & 新闻',
+          '摘要提炼 + 结构化整理',
+          '对标竞品分析框架',
         ],
-        advance: '联通全网 · 内容工厂 · 自动更新机制',
+        handsOn: '5min 跑通：选一个行业，输出一页简报',
       },
       {
-        id: 'm3', num: '3', color: 'vermilion',
-        name: '个人数字分身搭建',
-        time: 25,
-        summary: '基础 / 技能 / 人格 三层颗粒度',
+        id: 'c3', num: '3', phase: '二阶', phaseName: '岗位提效', color: 'jade',
+        name: '项目周期管理',
+        format: '视频 + 模板',
+        time: 40,
+        summary: '用 AI 拆解项目里程碑、生成 WBS、自动提醒关键节点风险',
+        output: '一个项目跟踪 Prompt 模板',
         confirmed: false,
         points: [
-          '基础层（5min）：蒸馏你自己的风格 —— 语气、常用表达、工作流',
-          '技能层（10min）：把分镜头脚本 / CMO 文案等专业技能蒸馏成 Agent',
-          '人格层（10min）：联合 2 和个人知识库，做出代表你本人发言的数字分身',
-          '部署到各平台（飞书 / 钉钉 / Web）',
+          '项目里程碑拆解 Prompt',
+          'WBS 自动生成 + 责任人匹配',
+          '关键节点风险识别 & 提醒',
         ],
-        advance: '云端 24h 数字分身 · 加入群聊协同 · 不同代表人物圆桌会议',
+        handsOn: '5min 跑通：拿手头项目，输出一份 WBS',
       },
       {
-        id: 'm4', num: '4', color: 'gold',
-        name: '图 / 文 / 视频生成（侧重品味与设计语言）',
-        time: 28,
-        summary: '拆成 3 个 mini + 5min 质量评估清单',
+        id: 'c4', num: '4', phase: '二阶', phaseName: '岗位提效', color: 'jade',
+        name: '品味与设计（图/视频生成）',
+        format: '视频 + 案例',
+        time: 50,
+        summary: 'Midjourney / 豆包 / 可灵 提示词技巧、风格控制、品牌调性统一',
+        output: '一组方太风格视觉素材示例',
         confirmed: false,
         points: [
-          '图（10min）：构图 / 色调 / 排版直觉 + 实操改图',
-          '文（8min）：语气库 / 删减原则 / 标题公式',
-          '视频（5min）：脚本 → 分镜 → 生成的全链路',
-          '质量检查清单（5min）：能删则删 / 有人味 / 事实核查',
+          '提示词结构：主体 / 风格 / 光影 / 构图',
+          '品牌调性统一的工程化方法',
+          '图 → 视频的工作流串联',
         ],
+        handsOn: '5min 跑通：用品牌词生成 3 张不同风格图对比',
       },
       {
-        id: 'm5', num: '5', color: 'jade',
-        name: '行业研报 & 个性化报告推送',
-        time: 13,
-        summary: '搭情报流 + 团队协同推送',
+        id: 'c5', num: '5', phase: '插阶', phaseName: '个人知识基建', color: 'gold',
+        name: '本地知识库搭建（Obsidian + LLM Wiki）',
+        format: '视频 + 实操 🔥',
+        time: 60,
+        summary: '可自进化的个人知识库 · 从「会用工具」到「搭建系统」的关键桥梁',
+        output: '一个可自进化的个人知识库',
         confirmed: false,
         points: [
-          '搭情报流（8min）：选信源 / 设标签 / 定时抓取',
-          '团队协同（5min）：研报推送给上下游伙伴的格式',
-          '产出：每人一键可订阅的行业简报',
+          '基础：Obsidian 安装 + 文件夹结构（001 收集 → 002 整理 → 003 积累）',
+          '核心：LLM Wiki SCHEMA / index / log 三件套，每日积累自动归类并标注来源',
+          '进阶：Skill 自动提取可复用流程 → 存入技能库 → 下次对话直接调用',
+          '高阶：联通全网知识源，搭建「内容工厂」，增量同步到数字分身',
         ],
+        handsOn: '5min 跑通：建一个空的 001/002/003 文件夹结构',
+      },
+      {
+        id: 'c6', num: '6', phase: '三阶', phaseName: '进阶自动化', color: 'vermilion',
+        name: 'Skill · 干法萃取 / 标杆蒸馏',
+        format: '实操视频',
+        time: 55,
+        summary: '将市场总监团队的工作流程、决策逻辑、分发链路萃取为 Skill / Agent',
+        output: '一个可复用的「市场总监数字分身」Skill',
+        confirmed: false,
+        points: [
+          '干法萃取方法论：观察 → 拆解 → 标准化 → 自动化',
+          '从团队标杆到 Skill：决策逻辑 + 工作流 + 分发链路',
+          'Skill 持续迭代 & 多场景复用',
+        ],
+        handsOn: '5min 跑通：把一个你常做的工作流写成 Skill 草稿',
+      },
+      {
+        id: 'c7', num: '7', phase: '三阶', phaseName: '进阶自动化', color: 'vermilion',
+        name: '云端数字分身 · 跨平台部署',
+        format: '视频 + 实操',
+        time: 50,
+        summary: '数字分身部署到飞书 / 钉钉 / 微信，7×24h 执行任务、入群应答、跨平台同步',
+        output: '一个接入飞书群聊的数字分身 Demo',
+        confirmed: false,
+        points: [
+          '云端部署架构：Webhook / API / Bot 接入',
+          '飞书 / 钉钉 / 微信 三大平台对接',
+          '7×24h 自动应答 + 任务执行',
+        ],
+        handsOn: '5min 跑通：把数字分身接入一个测试群',
+      },
+      {
+        id: 'c8', num: '8', phase: '三阶', phaseName: '进阶自动化', color: 'vermilion',
+        name: '个人在线网页部署',
+        format: '手把手实操',
+        time: 40,
+        summary: '用 AI 生成简历 / 作品集 / 看板页面 → GitHub Pages 一键部署上线',
+        output: '一个可公开访问的个人网页链接',
+        confirmed: false,
+        points: [
+          '用 AI 生成个人主页 / 简历 / 作品集',
+          'GitHub Pages 一键部署上线',
+          '域名绑定 & 持续迭代',
+        ],
+        handsOn: '5min 跑通：fork 模板，部署到自己的 GitHub',
+        isFinal: true,
       },
     ],
-    collaboration: 'AI 协作模式融入每个板块末尾 30 秒 ——「这个场景怎么拉团队一起用」',
+    collaboration: '每个案例配一个"你可以马上试"的 5 分钟动手环节，确保 5 分钟内能跑通',
     advanceItems: [
       '云端 24h 数字分身代表人格执行任务',
       '数字分身加入群聊进行项目协同',
       '不同代表人物实时开启圆桌会议',
-      '联通全网知识库，搭建内容工厂',
+      '联通全网知识源，搭建内容工厂',
       'AI + 团队情报协同的高级工作流',
+    ],
+    overallAdvice: [
+      '普遍性优先：前 4 个案例覆盖 80% 岗位通用需求，建议优先产出',
+      '本地知识库作为桥梁：从「会用工具」到「搭建系统」的过渡，承接上端输出、下端萃取',
+      '数字分身区分基础与进阶：Skill 萃取为基础课，云端部署+跨平台为进阶专题',
+      '「个人网页部署」作为结课产出：每条视频学完，最终拼成个人 AI 工作台，学员有成就感',
+      '每个案例配一个"你可以马上试"的动手环节：5 分钟内能跑通',
     ],
     phases: [
       {
-        name: 'Phase 1 · 职前预热', sub: '入职前 · 7 月中旬起',
+        name: '一阶 · 认知 & 选型', sub: '从「知道 AI」到「会用 AI」',
         color: 'vermilion',
-        summary: '主线课程前置 · 工具上手 · 案例预热',
+        summary: '建立全局视野 · 知道每种任务该用哪个工具',
         modules: [
-          { icon: '主', title: '主线课程（90min）', desc: '6 板块一次课，覆盖 AI 思维 → 知识库 → 分身 → 表达 → 情报' },
-          { icon: '具', title: '工具预热', desc: '通义千问 / Kimi / DeepSeek / Claude Code 等工具安装与试用' },
-          { icon: '案', title: '案例预热', desc: '已落地 AI 工作流的伙伴做 5min 经验分享' },
+          { icon: '评', title: '大模型横评', desc: '15min 视频 · 5 模型对比 + 选型对照表' },
         ],
       },
       {
-        name: 'Phase 2 · 入职衔接', sub: '入职后 1–2 周',
+        name: '二阶 · 岗位提效', sub: '从「会用 AI」到「用 AI 干活」',
         color: 'jade',
-        summary: '主线课程 + 岗位工作流落地',
+        summary: '覆盖 80% 岗位通用需求 · 3 个视频 + 实操案例',
         modules: [
-          { icon: '岗', title: '岗位 AI 工作流', desc: 'R&D / 营销 / 供应链 / 职能 各自的体系定向场景' },
-          { icon: '协', title: '协同实战 Workshop', desc: '基于问卷需求的真实场景小组演练 + 导师点评' },
-          { icon: '链', title: '工具链整合', desc: 'AI + 飞书 / 钉钉 / 文档工具链嵌入日常协作流' },
+          { icon: '调', title: '行业调研', desc: '视频 + 实操 · 一份 AI 简报模板' },
+          { icon: '项', title: '项目周期管理', desc: '视频 + 模板 · 一份 WBS Prompt 模板' },
+          { icon: '品', title: '品味与设计', desc: '视频 + 案例 · 一组方太风格视觉素材' },
         ],
       },
       {
-        name: 'Phase 3 · 进阶深化', sub: '入职后 1–3 个月',
+        name: '插阶 · 个人知识基建', sub: '从「单点使用」到「系统沉淀」',
         color: 'gold',
-        summary: '云端数字分身 · 圆桌会议 · 联通全网',
+        summary: '桥梁模块 · 承接上端输出、下端萃取',
         modules: [
-          { icon: '云', title: '云端 24h 数字分身', desc: '数字分身 7×24 代表你执行任务 · 加入群聊协同' },
-          { icon: '圆', title: '代表人物圆桌会议', desc: '不同体系的数字分身开启实时圆桌 · 跨域协同' },
-          { icon: '知', title: '个人知识库 + 联通全网', desc: '沉淀经验 · 联通外部知识源 · 内容工厂' },
+          { icon: '库', title: '本地知识库搭建', desc: 'Obsidian + LLM Wiki · 基础/核心/进阶/高阶四层' },
+        ],
+      },
+      {
+        name: '三阶 · 进阶自动化', sub: '从「搭建系统」到「让系统替你干」',
+        color: 'vermilion',
+        summary: '3 个案例 · 结课产出 = 个人 AI 工作台',
+        modules: [
+          { icon: '萃', title: 'Skill 干法萃取', desc: '实操 · 一个可复用 Skill' },
+          { icon: '云', title: '云端数字分身', desc: '视频 + 实操 · 一个接入群聊的 Demo' },
+          { icon: '网', title: '个人在线网页部署', desc: '手把手 · 一个可公开访问的网页', final: true },
         ],
       },
     ],
@@ -2831,7 +3067,7 @@ function renderMain() {
           <span class="total-num">/ ${totalMods}</span>
         </div>
         <div class="course-progress-meta">
-          <div class="course-progress-title">${allDone ? '课程设计已全部完成' : '子课程确认进度'}</div>
+          <div class="course-progress-title">${allDone ? '课程设计已全部完成' : '案例确认进度'}</div>
           <div class="course-progress-hint">
             ${allDone
               ? `所有板块已确认 · 改动会自动保存 · 上次保存 ${formatTime(lastSavedAt)}`
@@ -2876,32 +3112,48 @@ function renderMain() {
     });
     html += `</div></section>`;
 
-    // 主线课程
+    // 主线课程 — v3 案例库
     html += `<section class="section">
       <div class="section-head">
         <div class="section-num">02</div>
         <div>
-          <div class="section-sub">MAIN COURSE · <span contenteditable="true" data-path="totalTime" data-placeholder="90" style="display:inline-block;min-width:24px">${data.course.totalTime}</span>min 一次课 · ${totalMods} 板块 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
-          <div class="section-title">主线课程设计</div>
+          <div class="section-sub">CASE LIBRARY · ${totalMods} 案例 · 4 阶段 · 普遍性 + 快速上手 <span class="edit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>点击编辑</span></div>
+          <div class="section-title">主线案例库</div>
         </div>
       </div>
 
       <div class="course-summary-bar">
         <span class="course-summary-tag" contenteditable="true" data-path="version" data-placeholder="版本标签">${data.course.version}</span>
-        <div class="course-summary-total"><span contenteditable="true" data-path="totalTime" data-placeholder="90" style="display:inline-block;min-width:40px;text-align:right">${data.course.totalTime}</span><small>min</small></div>
+        <div class="course-summary-total">${totalMods}<small>案例</small></div>
         <div class="course-summary-meta" contenteditable="true" data-path="tagline" data-placeholder="副标题">${data.course.tagline}</div>
       </div>`;
 
+    // 按 phase 分组渲染
+    let lastPhase = '';
     data.course.mainModules.forEach((mod, mi) => {
       const isDone = !!mod.confirmed;
+      // 阶段分隔条
+      if (mod.phase !== lastPhase) {
+        html += `<div class="phase-divider phase-${mod.color}">
+          <div class="phase-divider-line"></div>
+          <div class="phase-divider-label">${mod.phase} · ${mod.phaseName}</div>
+          <div class="phase-divider-line"></div>
+        </div>`;
+        lastPhase = mod.phase;
+      }
       html += `<div class="main-module adv-${mod.color} ${isDone ? 'is-done' : ''}">
         <div class="main-module-head">
           <div class="main-module-num" contenteditable="true" data-path="mainModules.${mi}.num" data-placeholder="0">${mod.num}</div>
           <div class="main-module-body">
-            <div class="main-module-name" contenteditable="true" data-path="mainModules.${mi}.name" data-placeholder="板块名称">${mod.name}</div>
+            <div class="main-module-name" contenteditable="true" data-path="mainModules.${mi}.name" data-placeholder="案例名称">${mod.name}</div>
             <div class="main-module-summary" contenteditable="true" data-path="mainModules.${mi}.summary" data-placeholder="一句话概括">${mod.summary}</div>
           </div>
-          <div class="main-module-time"><span contenteditable="true" data-path="mainModules.${mi}.time" data-placeholder="5" style="display:inline-block;min-width:24px;text-align:center">${mod.time}</span> min</div>
+          <div class="main-module-time"><span contenteditable="true" data-path="mainModules.${mi}.time" data-placeholder="15" style="display:inline-block;min-width:24px;text-align:center">${mod.time}</span> min</div>
+        </div>
+        <div class="main-module-meta">
+          <span class="meta-tag meta-format" contenteditable="true" data-path="mainModules.${mi}.format" data-placeholder="形式">📹 ${mod.format}</span>
+          <span class="meta-tag meta-output" contenteditable="true" data-path="mainModules.${mi}.output" data-placeholder="产出">📦 ${mod.output}</span>
+          ${mod.isFinal ? '<span class="meta-tag meta-final">🎓 结课产出</span>' : ''}
         </div>
         <div class="main-module-confirm">
           <label class="module-confirm-toggle">
@@ -2924,13 +3176,24 @@ function renderMain() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M12 5v14M5 12h14"/></svg>
           添加要点
         </button>
-        ${mod.advance !== undefined ? `<div class="main-module-advance" contenteditable="true" data-path="mainModules.${mi}.advance" data-placeholder="进阶内容描述">${mod.advance || ''}</div>` : ''}
+        ${mod.handsOn ? `<div class="main-module-handson"><span class="handson-label">🛠 5min 跑通</span><span class="handson-text" contenteditable="true" data-path="mainModules.${mi}.handsOn" data-placeholder="动手环节">${mod.handsOn}</span></div>` : ''}
       </div>`;
     });
 
     html += `<div class="collaboration-note">
-      <strong>协作融入：</strong><span contenteditable="true" data-path="collaboration" data-placeholder="协作说明">${data.course.collaboration}</span>
+      <strong>设计原则：</strong><span contenteditable="true" data-path="collaboration" data-placeholder="协作说明">${data.course.collaboration}</span>
     </div>`;
+
+    // 整体建议
+    if (data.course.overallAdvice && data.course.overallAdvice.length) {
+      html += `<div class="overall-advice">
+        <div class="overall-advice-title">📌 整体建议</div>
+        <ol class="overall-advice-list">`;
+      data.course.overallAdvice.forEach((a, i) => {
+        html += `<li><span contenteditable="true" data-path="overallAdvice.${i}" data-placeholder="建议">${a}</span></li>`;
+      });
+      html += `</ol></div>`;
+    }
 
     html += `</section>`;
 
@@ -3226,16 +3489,16 @@ function renderPanel() {
     const cTimeTotal = data.course.mainModules.reduce((s, m) => s + (Number(m.time) || 0), 0);
     p.innerHTML = `
       <div class="panel-block">
-        <div class="panel-block-title">子课程确认</div>
+        <div class="panel-block-title">案例确认</div>
         <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">
           <span style="font-family:var(--serif);font-size:28px;font-weight:700;color:var(--jade)">${cDone}</span>
           <span style="font-family:var(--serif);font-size:16px;color:var(--ink-300)">/ ${cTotal}</span>
-          <span style="font-size:11px;color:var(--ink-400);margin-left:6px">已完成</span>
+          <span style="font-size:11px;color:var(--ink-400);margin-left:6px">案例已确认</span>
         </div>
         <table class="mini-table">
           ${data.course.mainModules.map((m, i) => `
             <tr>
-              <td>板块 ${m.num}</td>
+              <td>案例 ${m.num}</td>
               <td>
                 <span style="${m.confirmed ? 'color:var(--jade);font-weight:600' : ''}">${m.confirmed ? '✓ 已确认' : '待确认'} · ${m.time}min</span>
               </td>
@@ -3245,19 +3508,23 @@ function renderPanel() {
         </table>
       </div>
       <div class="panel-block">
-        <div class="panel-block-title">阶段交付物</div>
+        <div class="panel-block-title">4 阶段交付物</div>
         <p style="font-size:12.5px;color:var(--ink-700);line-height:1.85">
-          <strong style="color:var(--ink-900)">主线</strong> → 个人知识库雏形 · 数字分身 · 行业简报订阅<br>
-          <strong style="color:var(--ink-900)">Phase 1</strong> → 主线课程 + 工具预热 + 案例分享<br>
-          <strong style="color:var(--ink-900)">Phase 2</strong> → 岗位 AI 工作流 + 协同 Workshop<br>
-          <strong style="color:var(--ink-900)">Phase 3</strong> → 云端数字分身 + 圆桌会议 + 联通全网
+          <strong style="color:var(--vermilion)">一阶 认知</strong> → 模型选型对照表<br>
+          <strong style="color:var(--jade)">二阶 提效</strong> → 行业简报 · WBS 模板 · 方太风格视觉<br>
+          <strong style="color:var(--gold)">插阶 知识基建</strong> → 可自进化个人知识库<br>
+          <strong style="color:var(--vermilion)">三阶 自动化</strong> → 数字分身 Skill · 群聊 Demo · 个人网页
         </p>
       </div>
       <div class="panel-block">
-        <div class="panel-block-title">关键提醒</div>
+        <div class="panel-block-title">整体建议</div>
         <div class="panel-callout">
-          <div class="panel-callout-title">主 线 边 界</div>
-          高阶内容（云端 24h · 圆桌会议 · 联通全网）放入 Phase 3，不在主线讲，保证一次课能完整交付。
+          <div class="panel-callout-title">5 条 核 心 建 议</div>
+          1. 普遍性优先：前 4 个案例覆盖 80% 岗位<br>
+          2. 本地知识库作为桥梁<br>
+          3. 数字分身分基础 + 进阶<br>
+          4. 个人网页部署作为结课产出<br>
+          5. 每个案例配 5min 跑通环节
         </div>
       </div>
     `;
@@ -3418,7 +3685,7 @@ function updateCourseProgress() {
   if (fill) fill.style.width = `${(doneMods/totalMods)*100}%`;
 
   const title = document.querySelector('.course-progress-title');
-  if (title) title.textContent = allDone ? '课程设计已全部完成' : '子课程确认进度';
+  if (title) title.textContent = allDone ? '课程设计已全部完成' : '案例确认进度';
   const hint = document.querySelector('.course-progress-hint');
   if (hint) {
     hint.textContent = allDone
@@ -3451,7 +3718,7 @@ function updateCourseProgress() {
   }
 }
 
-// 右侧参考面板：只更新「子课程确认」块，不重建整个 panel
+// 右侧参考面板：只更新「案例确认」块，不重建整个 panel
 function updateCoursePanel() {
   if (currentTab !== 'course') return;
   const panel = $('panelBody');
@@ -3461,11 +3728,11 @@ function updateCoursePanel() {
   const cDone = data.course.mainModules.filter(m => m.confirmed).length;
   const cTimeTotal = data.course.mainModules.reduce((s, m) => s + (Number(m.time) || 0), 0);
 
-  // 找「子课程确认」块
+  // 找「案例确认」块
   const blocks = panel.querySelectorAll('.panel-block');
   blocks.forEach(block => {
     const title = block.querySelector('.panel-block-title');
-    if (title && title.textContent.trim() === '子课程确认') {
+    if (title && title.textContent.trim() === '案例确认') {
       // 更新大数字
       const bigNum = block.querySelector('span[style*="font-size:28px"]');
       if (bigNum) bigNum.textContent = String(cDone);
